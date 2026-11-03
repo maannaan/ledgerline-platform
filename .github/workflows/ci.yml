@@ -60,13 +60,14 @@ jobs:
         run: docker build -t ledgerline-api:ci ./app
 
       - name: Container vulnerability scan (Trivy)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ledgerline-api:ci
           format: table
           exit-code: "1"
           severity: CRITICAL,HIGH
           ignore-unfixed: true
+          vuln-type: os,library
 
   terraform-validate:
     runs-on: ubuntu-latest

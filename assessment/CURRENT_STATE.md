@@ -1,9 +1,10 @@
 # CURRENT_STATE (handoff)
 
 **Updated:** 2026-11-03  
-**Phase:** 4 blockers cleared in-repo (CI hardened + TLS-ready); **your push** unlocks GHA  
+**Phase:** 4 — CI fix ready (Trivy tag + secrets module gitignore); **you** push  
 **Git root:** `/Users/apple/Desktop/Manan/ledgerline-platform`  
-**Remote:** `origin` → `https://github.com/maannaan/ledgerline-platform.git` (agent did **not** commit/push)
+**Remote:** `origin` → `https://github.com/maannaan/ledgerline-platform.git` (agent does **not** commit/push)  
+**Failed run:** https://github.com/maannaan/ledgerline-platform/actions/runs/41612869529
 
 ## Live staging
 
@@ -17,7 +18,7 @@
 
 | Blocker | Status |
 |---------|--------|
-| GitHub Actions not on remote | Ready locally; **you** commit + push (see `docs/GITHUB_FIRST_PUSH.md`) |
+| GitHub Actions green | First run failed (bad Trivy tag + `secrets/` gitignored). Fix ready — **you** push |
 | TLS on ALB | Code ready (`acm_certificate_arn`); needs your domain — `docs/runbooks/enable-tls.md` |
 
 ## Next

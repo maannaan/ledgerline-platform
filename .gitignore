@@ -11,7 +11,8 @@ infra/environments/**/tfplan
 *_accessKeys.csv
 rootkey.csv
 credentials.json
-secrets/
+# Only ignore a root-level secrets dir — not infra/modules/secrets
+/secrets/
 
 # Python
 __pycache__/
