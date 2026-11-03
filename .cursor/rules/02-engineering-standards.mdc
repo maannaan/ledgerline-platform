@@ -1,0 +1,27 @@
+---
+description: Production engineering standards for Ledgerline
+alwaysApply: true
+---
+
+# Engineering standards
+
+## Security
+
+- Never trust `X-Tenant-Id` as authorization; derive tenant from authenticated identity.
+- Least privilege; secrets in a secrets manager; no credentials in git or logs.
+- Parameterized SQL; encryption in transit and at rest; auditable admin actions.
+
+## Reliability
+
+- Health vs readiness; timeouts; bounded retries; idempotent ops; graceful shutdown.
+- Tested backups/restore; rollback procedures; failure isolation.
+
+## Observability
+
+- Structured JSON logs; correlation/trace IDs; tenant-aware telemetry with controlled cardinality.
+- Actionable alerts; measurable SLOs; documented error budgets.
+
+## Infrastructure / app
+
+- Reusable IaC; env separation; private DB networking; proportional architecture (no K8s for show).
+- Small components; positive and negative tests; pinned dependencies.

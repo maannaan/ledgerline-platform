@@ -1,0 +1,42 @@
+{
+  "alb_dns_name": "ll-staging-alb-1605781679.ap-south-1.elb.amazonaws.com",
+  "app_secret_arn": "arn:aws:secretsmanager:ap-south-1:660442155240:secret:ll-staging/app-Z4tqJi",
+  "dedicated_db_endpoints": {
+    "delta": "ll-staging-delta-pg.ctuqm8c04sdk.ap-south-1.rds.amazonaws.com"
+  },
+  "ecr_repository_url": "660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api",
+  "networking_note": "Lean assessment network: public subnets + assign_public_ip on Fargate; no NAT Gateway. DB remains private (SG app-only, not publicly accessible).",
+  "shared_db_endpoint": "ll-staging-shared-pg.ctuqm8c04sdk.ap-south-1.rds.amazonaws.com",
+  "tenant_inventory": {
+    "acme": {
+      "db_target": "shared",
+      "region": "ap-south-1",
+      "status": "active",
+      "tier": "shared"
+    },
+    "brightpath": {
+      "db_target": "shared",
+      "region": "ap-south-1",
+      "status": "active",
+      "tier": "shared"
+    },
+    "cobalt": {
+      "db_target": "shared",
+      "region": "ap-south-1",
+      "status": "active",
+      "tier": "shared"
+    },
+    "delta": {
+      "db_target": "dedicated:delta",
+      "region": "ap-south-1",
+      "status": "active",
+      "tier": "dedicated"
+    },
+    "harbor": {
+      "db_target": "shared",
+      "region": "ap-south-1",
+      "status": "active",
+      "tier": "shared"
+    }
+  }
+}

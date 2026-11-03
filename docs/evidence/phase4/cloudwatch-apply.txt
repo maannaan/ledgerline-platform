@@ -1,0 +1,6 @@
+timestamp=2026-11-03T09:19:52Z
+dashboard=Ltimestamp=2026-11-sns_topic=arn:aws:sns:ap-south-1:660442155sns_topic=arn:aws:sns:ap-south-1:660442155240:ledgerline-staging-alerts
+alarms=ledgerline-staging-5xx,ledgerline-staging-latency,ledgerline-staging-unhealthy-hosts
+lb=app/ll-staging-alb/d577276379a7d418
+tg=aws:elasticloadbalancing:ap-south-1:660442155240:targetgroup/ll-staging-tg/4514e08d75d8d107
+Confirm SNS email subscription in mananpaliwal30@gmail.com inbox.

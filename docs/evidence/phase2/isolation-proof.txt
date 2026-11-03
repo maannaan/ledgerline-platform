@@ -1,0 +1,49 @@
+TIMESTAMP 2026-11-03T08:00:57Z
+=== unauth ===
+HTTP/1.1 401 Unauthorized
+date: Tue, 03 Nov 2026 08:00:57 GMT
+server: uvicorn
+content-length: 98
+content-type: application/json
+x-request-id: 837a79b5-2c06-49fa-9d86-58437324328d
+
+
+{"error":"Missing Authorization bearer token","request_id":"837a79b5-2c06-49fa-9d86-58437324328d"}
+=== create acme ===
+{"id":25014}
+brightpath create: {"id":25015}
+=== IDOR attempt acme gets brightpath 25015 ===
+HTTP/1.1 404 Not Found
+date: Tue, 03 Nov 2026 08:00:57 GMT
+server: uvicorn
+content-length: 73
+content-type: application/json
+x-request-id: b4acd273-4185-4792-8279-5d4a112e7f9b
+
+
+{"error":"not_found","request_id":"b4acd273-4185-4792-8279-5d4a112e7f9b"}
+=== header spoof ===
+HTTP/1.1 403 Forbidden
+date: Tue, 03 Nov 2026 08:00:57 GMT
+server: uvicorn
+content-length: 111
+content-type: application/json
+x-request-id: 426805a4-ce68-4a21-b8ad-06b7941cb97a
+
+
+{"error":"X-Tenant-Id does not match authenticated tenant","request_id":"426805a4-ce68-4a21-b8ad-06b7941cb97a"}
+=== sqli ===
+count 0
+has_secret False
+=== admin query param ===
+HTTP/1.1 401 Unauthorized
+date: Tue, 03 Nov 2026 08:00:57 GMT
+server: uvicorn
+content-length: 76
+content-type: application/json
+x-request-id: 570efafc-637f-493a-8992-ce4d61c110e9
+
+
+{"error":"Unauthorized","request_id":"570efafc-637f-493a-8992-ce4d61c110e9"}
+=== logs must not contain admin token plaintext from successful path ===
+api-1  | INFO:     192.168.65.1:61389 - "DELETE /admin/tenants/acme?token=ll_admin_lab_token_phase2 HTTP/1.1" 401 Unauthorized

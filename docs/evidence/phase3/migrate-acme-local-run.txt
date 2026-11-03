@@ -1,0 +1,19 @@
+./infra/scripts/migrate_acme_local.sh
+Ensuring source has acme rows...
+ acme_count 
+------------
+      20002
+(1 row)
+
+Creating destination database ledgerline_acme_cutover (idempotent)...
+CREATE DATABASE
+Copying schema + acme data via dump/restore...
+CREATE TABLE
+TRUNCATE TABLE
+COPY 20002
+source_acme=20002 dest_acme=20002 elapsed_seconds=0
+Local Acme migration rehearsal OK
+timestamp=2026-11-03T08:10:11Z
+source_acme=20002
+dest_acme=20002
+elapsed_seconds=0

@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ledgerline — Predixion AI Live Assessment Build Playbook</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2d;--panel2:#18233a;--text:#e8eef9;--muted:#aab8cf;--line:#2a3955;--blue:#78aaff;--green:#65d6a3;--amber:#ffd27a;--red:#ff8f9a;--purple:#c4a5ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.65 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+a{color:var(--blue)}.wrap{max-width:1180px;margin:auto;padding:28px 22px 80px}.hero{padding:44px 38px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(135deg,#172743,#11182a 65%,#1b1b36);margin-bottom:24px}.eyebrow{color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:12px}.hero h1{font-size:clamp(32px,5vw,54px);line-height:1.08;margin:12px 0}.hero p{max-width:850px;color:var(--muted);font-size:17px}.pill{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:5px 11px;margin:4px 5px 0 0;color:var(--muted);font-size:12px}.notice{border-left:4px solid var(--amber);background:#282316;padding:14px 17px;border-radius:8px;color:#f8e7c2;margin:18px 0}.danger{border-left-color:var(--red);background:#2a1b27;color:#ffe0e3}.success{border-left-color:var(--green);background:#14291f;color:#d8ffeb}
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px;align-items:start}.toc{position:sticky;top:18px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;max-height:calc(100vh - 36px);overflow:auto}.toc b{display:block;margin-bottom:10px}.toc a{display:block;text-decoration:none;color:var(--muted);padding:5px 0;font-size:13px}.toc a:hover{color:var(--blue)}main{min-width:0}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;margin:0 0 20px}.card h2{font-size:25px;margin:0 0 12px}.card h3{font-size:18px;margin:23px 0 8px;color:#dce8ff}.card h4{margin:17px 0 5px;color:var(--blue)}p{margin:8px 0 12px}ul,ol{padding-left:22px}li{margin:5px 0}.muted{color:var(--muted)}.small{font-size:13px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.tile{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:15px}.tile strong{display:block;font-size:18px}.tag{font-size:11px;font-weight:700;letter-spacing:.04em;border-radius:6px;padding:3px 7px;background:#263a5a;color:#cfe0ff}.tag.green{background:#153b2d;color:#a7f1cc}.tag.amber{background:#453719;color:#ffe2a3}.tag.red{background:#492631;color:#ffc4cb}table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}th,td{border:1px solid var(--line);padding:10px 11px;text-align:left;vertical-align:top}th{background:#1a2942;color:#dce8ff}tr:nth-child(even) td{background:#111b2e}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#080d18;border:1px solid var(--line);padding:16px;border-radius:10px;color:#d8e6ff;font-size:13px;line-height:1.55}code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#b9d5ff}.checklist label{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #24324a}.checklist input{margin-top:6px;accent-color:#65d6a3}.bar{height:8px;background:#26344d;border-radius:9px;overflow:hidden}.bar span{display:block;height:100%;background:var(--green)}.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}.flow .node{padding:10px 13px;background:#1b2b46;border:1px solid #344d72;border-radius:9px}.arrow{color:var(--blue);font-weight:bold}.callout{padding:14px;border:1px dashed #48638a;border-radius:10px;background:#101b30}.footer{color:var(--muted);text-align:center;padding:30px 0}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.kbd{font-family:monospace;border:1px solid var(--line);border-radius:5px;padding:2px 6px;background:#0a1120}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.toc{position:relative;top:0;max-height:none}.two{grid-template-columns:1fr}.hero{padding:28px 22px}}
+@media print{body{background:white;color:#111}.hero,.card,.toc,.tile,pre{background:white;color:#111;border-color:#bbb}.layout{display:block}.toc{position:static;max-height:none}.toc a,a{color:#174b8b}.muted{color:#444}th{background:#eee;color:#111}tr:nth-child(even) td{background:#fafafa}.notice,.danger,.success{background:#f6f6f6;color:#111}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+ <div class="eyebrow">Engineering execution playbook · Candidate working document</div>
+ <h1>Ledgerline<br>Multi-Tenant Reliability Platform</h1>
+ <p>A practical build guide for the Predixion AI one-week live assessment. Use this document as the working specification for Cursor: inspect the supplied code, implement the highest-value requirements, test them, record evidence, and prepare to explain every decision.</p>
+ <span class="pill">Primary focus: security + reliability</span><span class="pill">IaC + automation</span><span class="pill">Observability + recovery</span><span class="pill">Safe self-healing extension</span>
+ <div class="notice"><b>Deadline operating assumption:</b> You told me the implementation must be submitted by Thursday and the review/presentation is Saturday 7 November at 3:00 PM. The PDF itself contains unfilled date/time placeholders. Confirm the exact submission time, spend cap, reimbursement limit and secure-sharing method with the company. Do not assume the placeholders are permission to spend or deploy publicly.</div>
+</header>
+<div class="layout">
+<nav class="toc">
+ <b>Contents</b>
+ <a href="#mission">1. Mission & assessment facts</a>
+ <a href="#score">2. Evaluation strategy</a>
+ <a href="#principles">3. Engineering principles</a>
+ <a href="#architecture">4. Target architecture</a>
+ <a href="#repo">5. Repository structure</a>
+ <a href="#phases">6. Build phases and schedule</a>
+ <a href="#task1">7. Task 1 — Platform as code</a>
+ <a href="#task2">8. Task 2 — Security & isolation</a>
+ <a href="#task3">9. Task 3 — Observability</a>
+ <a href="#task4">10. Task 4 — Safe delivery</a>
+ <a href="#task5">11. Task 5 — Load & recovery</a>
+ <a href="#task6">12. Task 6 — Operations</a>
+ <a href="#healing">13. Reliability Autopilot add-on</a>
+ <a href="#evidence">14. Evidence & acceptance checklist</a>
+ <a href="#cursor">15. Cursor master instructions</a>
+ <a href="#prompts">16. Phase-by-phase Cursor prompts</a>
+ <a href="#presentation">17. Saturday presentation</a>
+ <a href="#incident">18. Live incident drill</a>
+ <a href="#risks">19. Risks, scope control & honesty</a>
+ <a href="#decisions">20. Decision log template</a>
+</nav>
+<main>
+
+<section class="card" id="mission">
+<h2>1. Mission and assessment facts</h2>
+<p><b>Source-derived brief:</b> Ledgerline is a fictional B2B SaaS company with one API service and one PostgreSQL database on a single VM. Deployments are manual over SSH using Docker Compose. Secrets are stored in a machine-level <code>.env</code> and code defaults. Tenant identity is trusted from <code>X-Tenant-Id</code> without authorization. There is no monitoring, alerting, tested backup or runbook.</p>
+<p>Acme Retail is already live. Seven more customers are scheduled over six months. The platform must become safe for eight clients, and adding a tenant should take hours rather than weeks or require the engineer to be online.</p>
+<div class="grid">
+ <div class="tile"><span class="tag">SHARED</span><strong>Acme Retail</strong><span class="muted small">Live; migration with no data loss and under 5 minutes downtime.</span></div>
+ <div class="tile"><span class="tag">SHARED</span><strong>Brightpath Learning</strong><span class="muted small">Month 1; standard onboarding.</span></div>
+ <div class="tile"><span class="tag">SHARED</span><strong>Cobalt Logistics</strong><span class="muted small">Month 2; heavy reporting during business hours.</span></div>
+ <div class="tile"><span class="tag amber">DEDICATED</span><strong>Delta Finance</strong><span class="muted small">Month 2; own database, own encryption key, admin audit trail, security questionnaire.</span></div>
+ <div class="tile"><span class="tag amber">DEDICATED</span><strong>Evergreen Health</strong><span class="muted small">Month 3; restore within 1 hour, maximum 15 minutes data loss.</span></div>
+ <div class="tile"><span class="tag">SHARED</span><strong>Fjord Media</strong><span class="muted small">Month 4; 10x traffic spikes.</span></div>
+ <div class="tile"><span class="tag amber">DEDICATED</span><strong>Granite Insurance</strong><span class="muted small">Month 5; data in a different region.</span></div>
+ <div class="tile"><span class="tag">SHARED</span><strong>Harbor Foods</strong><span class="muted small">Month 6; standard onboarding.</span></div>
+</div>
+<h3>Assessment requirements at a glance</h3>
+<table><thead><tr><th>Task</th><th>Required outcomes</th></tr></thead><tbody>
+<tr><td>1. Platform as code</td><td>Provision from empty cloud account using IaC; staging + production; one-step shared/dedicated onboarding; demonstrate Acme + Brightpath shared and Delta dedicated; migrate Acme with described production plan under 5 minutes downtime.</td></tr>
+<tr><td>2. Security and separation</td><td>Find/fix flaws; real authentication; automated cross-tenant isolation test; secrets manager and least privilege; encryption in transit/at rest; immutable admin audit trail; honest Delta questionnaire.</td></tr>
+<tr><td>3. Observability</td><td>Tenant-tagged metrics/logs/traces; filterable health dashboard; availability and latency SLOs; at least three useful alerts; one-page error-budget policy.</td></tr>
+<tr><td>4. Safe delivery</td><td>CI tests + dependency/container scan + isolation test; deploy without downtime; one-step rollback; safe schema changes; canary to one tenant before wider rollout.</td></tr>
+<tr><td>5. Pressure and recovery</td><td>Automated backups + timed restore for Evergreen; k6 200 RPS for 10 minutes across three tenants; p95 /records under 300ms; noisy-neighbour test with Cobalt; document first bottleneck and fix.</td></tr>
+<tr><td>6. Operations and leadership</td><td>Three runbooks; blameless post-incident review; shared/dedicated monthly cost estimate; maximum two-page 90-day plan.</td></tr>
+</tbody></table>
+<div class="notice danger"><b>Assessment rules:</b> Use only generated/seed data, never real customer data. Set a billing alert first and stay within the confirmed spend cap. Never send cloud credentials. AI coding assistants are allowed, but disclose their use in README and be able to explain and modify all work. Keep the environment running for the live session and tear it down within 48 hours afterward, then provide proof it is gone.</div>
+</section>
+
+<section class="card" id="score">
+<h2>2. Evaluation strategy — optimize for evidence, not feature count</h2>
+<table><thead><tr><th>Criterion</th><th>Weight</th><th>What a strong submission demonstrates</th><th>Our proof</th></tr></thead><tbody>
+<tr><td>Running platform reliably</td><td><b>30%</b></td><td>Meaningful SLOs, alerts, error budget, proven restore, clear incident diagnosis.</td><td>Dashboard, alert tests, restore transcript, incident notes, k6 output.</td></tr>
+<tr><td>Security and client separation</td><td><b>20%</b></td><td>Flaws fixed, isolation proven, least privilege, honest questionnaire.</td><td>SECURITY.md, negative tests, auth design, audit events, questionnaire.</td></tr>
+<tr><td>Automation and scaling</td><td><b>15%</b></td><td>One-command platform and repeatable tenant onboarding.</td><td>Terraform plan/apply instructions, onboarding command and tenant inventory.</td></tr>
+<tr><td>Hands-on development</td><td><b>10%</b></td><td>Clean application fixes, safe deployments/migrations, rollback.</td><td>Tests, workflow, release record, rollback rehearsal.</td></tr>
+<tr><td>Ownership and judgment</td><td><b>10%</b></td><td>Clear priorities, explicit trade-offs, candid omissions.</td><td>README, decision records, time log, limitations.</td></tr>
+<tr><td>Building reliability function</td><td><b>10%</b></td><td>Runbooks a new engineer can follow and credible 90-day plan.</td><td>Three runbooks, post-incident review, cost model, 90-day plan.</td></tr>
+<tr><td>Communication</td><td><b>5%</b></td><td>Plain, accurate explanations.</td><td>Readable docs, diagrams, live walkthrough.</td></tr>
+</tbody></table>
+<div class="callout"><b>Priority rule:</b> The highest weighted outcomes are reliability (30%) and security (20%). Do not let the self-healing add-on, visual polish or an ambitious cloud topology displace tenant isolation, tested restore, SLOs, alerts and evidence.</div>
+</section>
+
+<section class="card" id="principles">
+<h2>3. Engineering principles</h2>
+<div class="grid">
+<div class="tile"><strong>Secure by default</strong><span class="muted small">Identity establishes tenant context. A client-controlled header is never authority.</span></div>
+<div class="tile"><strong>Isolation is tested</strong><span class="muted small">Test read, create, update, delete, search, reports and admin boundaries.</span></div>
+<div class="tile"><strong>Observable by design</strong><span class="muted small">Every request gets correlation ID, tenant context, trace and structured event.</span></div>
+<div class="tile"><strong>Automate repeatable work</strong><span class="muted small">Provision, onboard, deploy, backup, restore and rollback are scripted.</span></div>
+<div class="tile"><strong>Recover safely</strong><span class="muted small">Bounded retries, idempotency, health checks, rollback and human escalation.</span></div>
+<div class="tile"><strong>Evidence over claims</strong><span class="muted small">Only mark an item complete after a reproducible test or captured output.</span></div>
+</div>
+<h3>Architecture choices should be proportional</h3>
+<ul>
+<li>Prefer a managed service when it reduces operational load and fits the budget.</li>
+<li>Do not introduce Kubernetes, Kafka, service mesh or a large microservice decomposition solely to appear enterprise-grade.</li>
+<li>Keep the application simple enough to finish and explain. A modular FastAPI service is acceptable if boundaries and scaling limits are documented.</li>
+<li>Make a distinction between <b>implemented</b>, <b>tested locally</b>, <b>deployed</b>, <b>verified in cloud</b> and <b>planned</b>.</li>
+</ul>
+</section>
+
+<section class="card" id="architecture">
+<h2>4. Target architecture — proposed, not prescribed by the brief</h2>
+<p>The assessment permits AWS, GCP, Azure or another provider and does not score the provider choice. This playbook proposes AWS because it fits the candidate's existing AWS/Terraform experience. Confirm budget before provisioning. If the budget is too small, use a local validation path and clearly label what was not deployed.</p>
+<div class="flow"><div class="node">Clients / API consumers</div><span class="arrow">→</span><div class="node">HTTPS ALB / ingress</div><span class="arrow">→</span><div class="node">FastAPI service</div><span class="arrow">→</span><div class="node">Tenant resolver + policy</div></div>
+<div class="flow"><div class="node">Shared PostgreSQL tier<br><small>tenant_id + DB policies</small></div><span class="arrow">↔</span><div class="node">Dedicated DB<br><small>Delta / Evergreen / Granite</small></div></div>
+<div class="flow"><div class="node">Secrets Manager + KMS</div><span class="arrow">·</span><div class="node">CloudWatch / OTEL</div><span class="arrow">·</span><div class="node">Backups / restore</div><span class="arrow">·</span><div class="node">CI/CD + Terraform</div></div>
+<h3>Reference deployment shape</h3>
+<table><thead><tr><th>Layer</th><th>Possible AWS implementation</th><th>Important guardrail</th></tr></thead><tbody>
+<tr><td>Network</td><td>VPC, public subnets for ALB, private app/database subnets, security groups.</td><td>Database never publicly reachable; restrict egress where practical.</td></tr>
+<tr><td>Application</td><td>ECS Fargate service behind ALB, desired count appropriate to budget.</td><td>Health checks, graceful shutdown, autoscaling limits and deployment circuit breaker.</td></tr>
+<tr><td>Database</td><td>RDS PostgreSQL; shared database/schema or pooled DB for shared tenants; separate DB/instance for dedicated tier based on isolation requirement.</td><td>Do not describe schema separation as a separate database. Be precise about actual isolation level.</td></tr>
+<tr><td>Encryption</td><td>TLS in transit; RDS encryption; KMS customer-specific key for Delta.</td><td>Key policy and IAM permissions must be least privilege. Never commit key material.</td></tr>
+<tr><td>Secrets</td><td>AWS Secrets Manager, task execution/task role.</td><td>Secrets injected at runtime; no secrets in Terraform state unless protected and understood.</td></tr>
+<tr><td>Observability</td><td>CloudWatch metrics/logs/alarms; OpenTelemetry instrumentation; dashboard.</td><td>Tenant labels must not create unbounded metric cardinality. Never log payloads or secrets by default.</td></tr>
+<tr><td>Delivery</td><td>GitHub Actions OIDC to AWS; ECR; ECS deployment.</td><td>Protected branch, tests/scans, immutable image digest, rollback path.</td></tr>
+<tr><td>Audit</td><td>Application admin audit events to append-only storage/log group with restricted deletion; CloudTrail for AWS control plane.</td><td>Separate application audit trail from infrastructure CloudTrail. Define retention and access.</td></tr>
+</tbody></table>
+<div class="notice"><b>Dedicated client nuance:</b> Delta explicitly requires its own database and own encryption key. Evergreen has a restore target. Granite must have data in a different region. These are distinct requirements. Do not claim the dedicated tier meets all three simply because a tenant is marked <code>dedicated</code>.</div>
+<h3>Tenant model</h3>
+<ul>
+<li>Tenant registry: tenant ID, tier, region, database target/reference, KMS key reference, status, plan limits and onboarding metadata.</li>
+<li>Authenticated principal maps to permitted tenant IDs and roles. The API derives tenant context from verified credentials, not a caller-supplied header.</li>
+<li>For shared tenants, every query is tenant-scoped; add PostgreSQL Row-Level Security if it can be implemented and tested correctly.</li>
+<li>For dedicated tenants, route only through a server-side tenant registry. A client must not be able to select another tenant's database by changing a request field.</li>
+<li>Audit admin operations with actor, action, target tenant, timestamp, request ID, result and reason. Do not log bearer tokens or sensitive payloads.</li>
+</ul>
+</section>
+
+<section class="card" id="repo">
+<h2>5. Repository structure</h2>
+<p>Follow the assessment's expected layout. Cursor may add subfolders, but preserve these top-level locations so reviewers can find evidence quickly.</p>
+<pre>ledgerline-platform/
+├── README.md
+├── SECURITY.md
+├── app/
+│   ├── main.py
+│   ├── auth/
+│   ├── tenancy/
+│   ├── database/
+│   ├── routes/
+│   ├── services/
+│   ├── middleware/
+│   └── tests/
+├── infra/
+│   ├── modules/
+│   ├── environments/
+│   │   ├── staging/
+│   │   └── production/
+│   └── README.md
+├── .github/workflows/
+├── observability/
+│   ├── dashboards/
+│   ├── alerts/
+│   ├── slo/
+│   └── error-budget-policy.md
+├── loadtest/
+│   ├── load.js
+│   └── results/
+└── docs/
+    ├── architecture/
+    ├── decisions/
+    ├── runbooks/
+    │   ├── onboarding.md
+    │   ├── database-restore.md
+    │   └── incident-response.md
+    ├── security-questionnaire.md
+    ├── post-incident-review.md
+    ├── cost-model.md
+    ├── 90-day-plan.md
+    ├── evidence/
+    └── time-log.md</pre>
+<h3>Repository hygiene</h3>
+<ul>
+<li>Commit in small logical units; keep main branch runnable.</li>
+<li>Include <code>.env.example</code> with placeholders only; ensure <code>.env</code>, state files, credentials and generated secrets are ignored.</li>
+<li>Pin application dependencies. Pin Terraform provider versions and use a lock file.</li>
+<li>Never put cloud credentials, tenant bearer keys or real customer data in Git.</li>
+<li>Use generated test keys for demo tenants and share them only through the company's approved secure channel.</li>
+</ul>
+</section>
+
+<section class="card" id="phases">
+<h2>6. Build phases and time plan</h2>
+<p>The source brief expects approximately 20–25 hours over the assessment week and explicitly says not everything will be finished. The following is an execution plan adapted to the candidate's Thursday deadline and Saturday review. Treat dates as a planning assumption; the company's exact submission time is still to be confirmed.</p>
+<table><thead><tr><th>Phase</th><th>Target</th><th>Work</th><th>Exit gate</th></tr></thead><tbody>
+<tr><td>0. Recon</td><td>First 1–2 hours</td><td>Inspect supplied app, seed script, k6 script and questionnaire. Run locally. Inventory flaws. Confirm cloud budget.</td><td>Baseline runs locally; architecture/assumptions recorded.</td></tr>
+<tr><td>1. Security core</td><td>Early</td><td>Auth, tenant context, parameterized SQL, record-level scoping, admin auth/audit, negative tests.</td><td>Cross-tenant test fails on vulnerable baseline and passes after fix.</td></tr>
+<tr><td>2. Platform foundation</td><td>Early/mid</td><td>Terraform network, app, database, secrets, environment separation, shared/dedicated tenant model.</td><td>Staging deploy reproducible; core tenant provisioning works.</td></tr>
+<tr><td>3. Delivery + telemetry</td><td>Mid</td><td>CI pipeline, image scan, app tests, OTEL/logging, dashboard, SLOs and alerts.</td><td>Pipeline green; dashboard shows useful signals; alert test verified.</td></tr>
+<tr><td>4. Recovery + performance</td><td>Mid/late</td><td>Automated backups, restore test, k6 baseline and tuned result, Cobalt noisy-neighbour test.</td><td>Measured restore and load results recorded, including gaps.</td></tr>
+<tr><td>5. Operational finish</td><td>Before Thursday</td><td>Runbooks, questionnaire, cost model, PIR, 90-day plan, README and evidence.</td><td>Reviewer can reproduce and understand the system.</td></tr>
+<tr><td>6. Presentation prep</td><td>Friday/Saturday</td><td>Demo rehearsal, live incident practice, explain code and trade-offs.</td><td>Can navigate code, diagnose issue and change a component live.</td></tr>
+</tbody></table>
+<div class="notice success"><b>Definition of done:</b> A task is not complete because Cursor generated files. It is complete only when tests or a reproducible verification command pass, evidence is saved, limitations are documented, and the candidate can explain it.</div>
+</section>
+
+<section class="card" id="task1">
+<h2>7. Task 1 — Build the platform as code</h2>
+<h3>Required by the brief</h3>
+<ol>
+<li>Provision from an empty cloud account using IaC.</li>
+<li>Use the same code for staging and production.</li>
+<li>Support one repeatable onboarding action for shared and dedicated tiers.</li>
+<li>Show Acme + Brightpath as shared and Delta as dedicated.</li>
+<li>Move Acme seed data; describe production cutover with no data loss and under five minutes downtime.</li>
+</ol>
+<h3>Implementation plan</h3>
+<ul>
+<li>Terraform root modules per environment; reusable modules for network, database, service, IAM, secrets, monitoring and tenant resources.</li>
+<li>Use separate state per environment with remote state and locking if available; restrict state access because it can contain sensitive infrastructure metadata.</li>
+<li>Tenant onboarding should validate a tenant manifest, reserve tenant ID, create/assign data store, create key if dedicated, write secret references, configure limits, run migration/health check and register tenant.</li>
+<li>Make onboarding idempotent: running it twice should not create duplicate tenant records or keys unexpectedly.</li>
+<li>Tenant lifecycle states: requested → provisioning → validation → active; failed provisioning should leave a visible failed state and support safe retry/cleanup.</li>
+</ul>
+<h3>Acme migration plan</h3>
+<p>For a production migration under five minutes, use a rehearsed expand-and-cutover approach. A defensible design is: create target schema; bulk-copy the baseline while the old system serves traffic; use logical replication/CDC or an application dual-write/outbox mechanism to capture changes; validate counts/checksums; pause writes briefly; apply final delta; switch traffic; verify; keep rollback path. The exact method depends on current PostgreSQL version, privileges and data volume. Do not claim CDC/zero data loss was implemented unless it was actually rehearsed.</p>
+<pre># Illustrative command interface — implement this for real
+make platform-init ENV=staging
+make platform-apply ENV=staging
+make onboard TENANT=acme TIER=shared ENV=staging
+make onboard TENANT=brightpath TIER=shared ENV=staging
+make onboard TENANT=delta TIER=dedicated ENV=staging
+make tenant-list ENV=staging</pre>
+<h3>Acceptance tests</h3>
+<div class="checklist">
+<label><input type="checkbox"> Terraform format and validate succeed.</label>
+<label><input type="checkbox"> Plan from a clean environment is understandable and reviewed.</label>
+<label><input type="checkbox"> Staging and production use the same modules with different variables/state.</label>
+<label><input type="checkbox"> Onboarding command provisions or configures a tenant and can be safely retried.</label>
+<label><input type="checkbox"> Tenant inventory shows Acme and Brightpath shared; Delta dedicated.</label>
+<label><input type="checkbox"> Seeded Acme records migrated and verified by counts/checksum/sample comparison.</label>
+<label><input type="checkbox"> Migration document explains the under-five-minute production cutover and rollback.</label>
+</div>
+</section>
+
+<section class="card" id="task2">
+<h2>8. Task 2 — Security and client separation</h2>
+<h3>Flaws visible in the supplied reference application</h3>
+<table><thead><tr><th>Reference flaw</th><th>Required fix / verification</th></tr></thead><tbody>
+<tr><td>Hard-coded default <code>DATABASE_URL</code> and <code>ADMIN_TOKEN</code>.</td><td>Remove insecure defaults; load secrets from environment/secret manager; fail closed if required config absent.</td></tr>
+<tr><td>Tenant chosen directly from <code>X-Tenant-Id</code>.</td><td>Authenticate bearer token/session; derive tenant and role from verified identity/claims or server-side key mapping. Header may be diagnostic only, never authority.</td></tr>
+<tr><td>SQL query built with f-string in <code>/records</code>.</td><td>Parameterized SQL for tenant and search; validate inputs and use safe wildcard handling.</td></tr>
+<tr><td><code>/records/{record_id}</code> lookup lacks tenant restriction.</td><td>Filter by authenticated tenant (or route through authorized dedicated DB). Return 404/403 without leaking other tenant existence.</td></tr>
+<tr><td>Admin endpoint token is query/form parameter and unauthorized response is HTTP 200.</td><td>Use proper Authorization header, role-based permission, 401/403 statuses, constant-time token comparison if static API keys used.</td></tr>
+<tr><td>Admin deletion prints secret token.</td><td>Never log credentials. Emit structured audit event with actor, target, action, request ID, outcome; append-only restricted destination.</td></tr>
+<tr><td>Admin action has no robust audit trail.</td><td>Audit successful and denied admin actions; include timestamp and reason, exclude sensitive values.</td></tr>
+<tr><td>Autocommit connections and no explicit transaction boundaries.</td><td>Use context-managed connections/transactions, bounded pool, timeouts and rollback behaviour.</td></tr>
+<tr><td>Health endpoint only returns static ok.</td><td>Separate liveness from readiness; readiness checks critical dependencies with safe timeouts and no sensitive details.</td></tr>
+<tr><td>Heavy report uses sleep and self-join pattern.</td><td>Replace artificial delay; optimize query/indexes; isolate/report workload with bounded concurrency, timeout and tenant-level limits.</td></tr>
+<tr><td>Container runs as root; image copies all files and installs at runtime layer.</td><td>Multi-stage or slim image, pinned dependencies, non-root user, .dockerignore, healthcheck, read-only filesystem where feasible.</td></tr>
+<tr><td>Compose publishes database port and embeds credentials.</td><td>Private database network; no public port; secrets outside compose file; production network boundaries.</td></tr>
+</tbody></table>
+<h3>Authentication design</h3>
+<ul>
+<li>For assessment demo, a simple tenant API-key table can be acceptable if keys are high entropy, stored hashed, revocable, scoped to tenant and role, and compared safely. A managed identity provider/OIDC is preferable for human/admin access.</li>
+<li>Resolve token → principal → tenant permissions. Do not trust tenant ID sent by the client.</li>
+<li>Admin identity must be separate from tenant client identity. Require MFA for human production access where supported and disclose actual state in questionnaire.</li>
+<li>Use role-based authorization for tenant user, tenant admin, platform operator and read-only auditor.</li>
+</ul>
+<h3>Database isolation</h3>
+<p>For pooled tenants, enforce tenant scope in every repository query and ideally PostgreSQL Row-Level Security. Set tenant context per transaction using a safe session-local setting; ensure pooled connections reset context on return. Include negative tests. For dedicated tenants, map tenant to a distinct database connection secret on the server side. Do not let caller-supplied values select database names.</p>
+<h3>Required automated isolation tests</h3>
+<pre>1. Create tenant A and tenant B using independent credentials.
+2. Insert a record for A and a record for B.
+3. Authenticate as A:
+   - list returns only A records
+   - direct GET of B record is denied/not found
+   - update/delete B record is denied/not found
+   - search cannot expose B data
+   - report endpoint returns only A scope
+4. Attempt to change X-Tenant-Id to B while using A's token.
+5. Confirm response remains scoped to A or request is rejected.
+6. Authenticate as B and confirm B can access its own record.
+7. Verify admin-only routes reject tenant credentials.
+8. Verify audit record exists for privileged admin action and denied attempt.</pre>
+<h3>Delta security questionnaire</h3>
+<p>Write the questionnaire as if sent to Delta's security team. Each answer must be accurate to the current implementation. Use status labels such as <b>Implemented and tested</b>, <b>Implemented but not independently certified</b>, <b>Planned</b> and <b>Not currently supported</b>. Never claim SOC 2/ISO certification, MFA, key rotation, retention, breach-notification SLA or regional restrictions unless verified.</p>
+</section>
+
+<section class="card" id="task3">
+<h2>9. Task 3 — Observability, SLOs and error budget</h2>
+<h3>Signals</h3>
+<table><thead><tr><th>Signal</th><th>Minimum useful fields</th><th>Do not capture</th></tr></thead><tbody>
+<tr><td>Metrics</td><td>service, environment, endpoint, status class, tenant tier, tenant ID where cardinality is controlled.</td><td>Unbounded user IDs, record IDs, raw tokens.</td></tr>
+<tr><td>Logs</td><td>timestamp, level, service, env, tenant, request_id, trace_id, route, duration_ms, status, error_code.</td><td>Authorization headers, secrets, raw financial/health payloads.</td></tr>
+<tr><td>Traces</td><td>HTTP request, auth, tenant resolution, DB query span, external dependency span.</td><td>Raw credentials or sensitive payload attributes.</td></tr>
+</tbody></table>
+<h3>Candidate SLOs — tune after measuring baseline</h3>
+<table><thead><tr><th>SLO</th><th>Proposed target</th><th>Measurement</th><th>Why</th></tr></thead><tbody>
+<tr><td>Availability</td><td>99.9% monthly for successful eligible API requests</td><td>Good requests / eligible requests, excluding documented client errors.</td><td>Reasonable starting target for a small B2B SaaS, subject to product commitments.</td></tr>
+<tr><td>Latency</td><td>95% of <code>/records</code> requests under 300 ms</td><td>Histogram p95 for read/list requests.</td><td>Matches the assessment's explicit load-test target.</td></tr>
+<tr><td>Tenant isolation</td><td>Zero cross-tenant data exposure</td><td>Security tests and audit findings.</td><td>Not an error budget trade-off; any breach is a severity incident.</td></tr>
+</tbody></table>
+<p>Do not report a monthly SLO as proven from a few minutes of test traffic. State the observation window and sample size. If no production traffic exists, label the SLO as a proposed objective and show synthetic/load-test measurements separately.</p>
+<h3>At least three actionable alerts</h3>
+<ol>
+<li>API availability burn rate: sustained 5xx/failed request ratio above threshold over a meaningful window; include service and tenant scope.</li>
+<li>Latency: p95 <code>/records</code> exceeds 300 ms for sustained window, not a single spike.</li>
+<li>Database saturation: connection utilization, CPU, storage or replication lag crosses warning/critical threshold.</li>
+<li>Optional: backup failure or backup age exceeds policy; queue backlog; repeated deployment rollback.</li>
+</ol>
+<h3>Error budget policy — one-page document</h3>
+<ul>
+<li>Define the monthly budget from the availability SLO (for 99.9%, 0.1% of eligible time/requests, depending on chosen method).</li>
+<li>At 50% consumed: review top contributors and prioritize reliability fixes.</li>
+<li>At 75% consumed: require reliability review for risky releases and increase monitoring.</li>
+<li>At 100% consumed: pause non-essential feature releases; permit security, compliance and reliability fixes; require owner approval and rollback plan.</li>
+<li>Document exceptions, customer communication, review cadence and who can authorize release freeze.</li>
+</ul>
+</section>
+
+<section class="card" id="task4">
+<h2>10. Task 4 — Ship changes safely</h2>
+<h3>Pipeline stages</h3>
+<div class="flow"><div class="node">PR / commit</div><span class="arrow">→</span><div class="node">Format + lint</div><span class="arrow">→</span><div class="node">Unit + integration tests</div><span class="arrow">→</span><div class="node">Tenant isolation tests</div><span class="arrow">→</span><div class="node">Dependency + image scan</div><span class="arrow">→</span><div class="node">Build immutable image</div><span class="arrow">→</span><div class="node">Deploy canary</div><span class="arrow">→</span><div class="node">Verify + promote</div></div>
+<ul>
+<li>Use GitHub Actions OIDC rather than long-lived AWS keys.</li>
+<li>Build once and promote the same image digest through environments.</li>
+<li>Keep secrets out of job logs; use least-privilege role for each workflow.</li>
+<li>Set deployment health checks, minimum healthy capacity and deployment circuit breaker/rollback.</li>
+<li>Release to one tenant first, monitor tenant-specific errors/latency, then expand.</li>
+</ul>
+<h3>Safe schema changes</h3>
+<p>Use expand-and-contract: add backward-compatible nullable column/table/index first; deploy app code that can read old/new schema; backfill in batches; switch reads/writes; only remove old schema in a later release. Avoid destructive migration in the same release that first depends on the new schema. For PostgreSQL, consider concurrent index creation and lock/statement timeouts.</p>
+<h3>Rollback</h3>
+<p>Application rollback should restore the prior immutable image. Database changes must remain backward-compatible so app rollback is possible. Never assume a destructive schema rollback is safe. Include one command or workflow dispatch that re-deploys the last known-good image and verify it with health and smoke tests.</p>
+</section>
+
+<section class="card" id="task5">
+<h2>11. Task 5 — Backups, load and noisy-neighbour isolation</h2>
+<h3>Backup and restore</h3>
+<ul>
+<li>Automated scheduled backups and point-in-time recovery where available; define retention and encryption.</li>
+<li>Evergreen target: restore within 1 hour and no more than 15 minutes data loss. The assessment requires a restore into a fresh instance and timed evidence.</li>
+<li>Measure actual RTO (restore duration) and RPO (latest recoverable point relative to incident time). Do not infer RPO from backup frequency alone.</li>
+<li>Restore into an isolated fresh database, validate schema, row counts, sample records and application connectivity; record start/end and recovery point.</li>
+<li>Runbook must identify who can authorize restore, how to avoid overwriting production, how to switch connection and how to verify.</li>
+</ul>
+<h3>Load test</h3>
+<p>Use the supplied k6 script and update authentication headers to match the implemented design. Target: 200 requests/second for 10 minutes across three tenants; 95% of <code>/records</code> requests under 300 ms. Run only after budget approval and capacity guardrails. Capture actual k6 summary, service metrics, DB metrics and test configuration.</p>
+<h3>Cobalt noisy-neighbour test</h3>
+<ul>
+<li>Run baseline traffic across Acme, Brightpath and Delta.</li>
+<li>Run heavy report workload for Cobalt concurrently.</li>
+<li>Compare other tenants' p95/p99 latency and error rate before/after.</li>
+<li>Possible mitigations: separate reporting pool/read replica, query timeout, concurrency limit, per-tenant rate limits, queue, resource isolation or dedicated workload class.</li>
+<li>Do not claim noisy-neighbour isolation if only the report endpoint was mocked or not actually exercised.</li>
+</ul>
+<h3>Evidence table</h3>
+<table><thead><tr><th>Run</th><th>RPS</th><th>p95 records</th><th>Error rate</th><th>DB CPU/connections</th><th>Conclusion</th></tr></thead><tbody>
+<tr><td>Baseline</td><td>Record actual</td><td>Record actual</td><td>Record actual</td><td>Record actual</td><td>First bottleneck</td></tr>
+<tr><td>After tuning</td><td>Record actual</td><td>Record actual</td><td>Record actual</td><td>Record actual</td><td>Verified change</td></tr>
+<tr><td>With Cobalt heavy reports</td><td>Record actual</td><td>Per-tenant result</td><td>Record actual</td><td>Record actual</td><td>Isolation result</td></tr>
+</tbody></table>
+<div class="notice danger"><b>Important:</b> The brief says “run the provided load test against production.” Do not expose a development database or test service to the public internet without security controls. Confirm the intended assessment environment and spend cap. If the full production run is unaffordable or unsafe, perform a controlled staging test and clearly state that it is not the requested production proof.</div>
+</section>
+
+<section class="card" id="task6">
+<h2>12. Task 6 — Run it and lead it</h2>
+<h3>Runbook 1: Onboard a tenant</h3>
+<ol><li>Receive approved tenant metadata and tier/region requirements.</li><li>Validate unique tenant ID, region, data tier, retention and plan limits.</li><li>Run onboarding command in the selected environment.</li><li>Create isolated database/schema and key/secret references according to tier.</li><li>Run schema migration and connectivity checks.</li><li>Create tenant credentials through secure channel; store only hashed API key material where applicable.</li><li>Run cross-tenant negative tests and smoke tests.</li><li>Activate tenant; record owner, date, configuration and audit event.</li><li>Send endpoint/test credential through approved secure method; never commit it.</li></ol>
+<h3>Runbook 2: Restore a database</h3>
+<ol><li>Declare incident and identify tenant/database/region.</li><li>Confirm restore point and obtain required approval.</li><li>Restore to a new isolated database; never overwrite source initially.</li><li>Record restore start, completion and recovery point.</li><li>Validate database integrity, migrations, row counts and application health.</li><li>Perform controlled connection switch or tenant routing update.</li><li>Monitor errors/latency; keep original database for rollback/forensics.</li><li>Document RTO/RPO achieved and notify stakeholders.</li></ol>
+<h3>Runbook 3: Incident response</h3>
+<ol><li>Detect and acknowledge alert; assign incident lead and severity.</li><li>Identify blast radius: service, environment, tenants, data/security impact.</li><li>Preserve evidence and correlate request/trace/deployment IDs.</li><li>Mitigate safely: rollback, scale within cap, disable faulty path, isolate tenant or fail over.</li><li>Verify recovery with user-facing and infrastructure signals.</li><li>Communicate status and next update time.</li><li>Capture timeline, cause, contributing factors and follow-up actions.</li></ol>
+<h3>Post-incident review</h3>
+<p>Blameless format: summary; customer impact; detection; timeline; root cause; contributing factors; what went well; what did not; remediation actions with owner and due date; prevention/verification. Avoid blaming an individual or writing speculative root causes as facts.</p>
+<h3>Cost model</h3>
+<p>Estimate shared and dedicated monthly cost with explicit assumptions and units: compute, database, storage, backup, network egress, logs/metrics, KMS, load balancer and support overhead. Separate fixed platform cost from marginal tenant cost. Use actual calculator/export data or clearly labeled estimates. Include a low/expected/high scenario and cost drivers.</p>
+<h3>90-day plan</h3>
+<table><thead><tr><th>Period</th><th>Focus</th><th>Deliverables</th></tr></thead><tbody>
+<tr><td>Days 1–30</td><td>Understand service, secure baseline, establish operational ownership.</td><td>Threat model, tenant inventory, on-call/incident process, SLO baseline, restore test, release pipeline and runbooks.</td></tr>
+<tr><td>Days 31–60</td><td>Scale onboarding and reduce toil.</td><td>Tenant automation, cost attribution, load testing, capacity model, secrets rotation, security review, customer deployment playbook.</td></tr>
+<tr><td>Days 61–90</td><td>Reliability maturity and team growth.</td><td>Error-budget process, game days, DR exercise, policy-as-code, service ownership, hiring plan and roadmap.</td></tr>
+</tbody></table>
+<p>Hiring view: identify the first role based on measured bottlenecks—likely platform/SRE or security/platform generalist—rather than hiring by title alone. Explain what workload justifies the hire and when.</p>
+</section>
+
+<section class="card" id="healing">
+<h2>13. Add-on — Reliability Autopilot (safe self-healing)</h2>
+<p><span class="tag green">Differentiator · Only after core acceptance criteria</span></p>
+<p>Proposed candidate-led enhancement, not an explicit requirement in the assessment. It should be a small, bounded remediation controller that observes known signals, evaluates deterministic policies, executes approved actions and verifies recovery. It is not an unrestricted autonomous agent.</p>
+<h3>Lifecycle</h3>
+<div class="flow"><div class="node">Detect signal</div><span class="arrow">→</span><div class="node">Correlate + diagnose</div><span class="arrow">→</span><div class="node">Policy + blast-radius check</div><span class="arrow">→</span><div class="node">Safe action / approval</div><span class="arrow">→</span><div class="node">Verify + audit</div></div>
+<h3>Good first use cases</h3>
+<table><thead><tr><th>Trigger</th><th>Action</th><th>Safety boundary</th><th>Verification</th></tr></thead><tbody>
+<tr><td>ECS task unhealthy</td><td>Allow ECS scheduler to replace unhealthy task; alert.</td><td>Do not repeatedly force deploy; cap restart/replace loop.</td><td>New task healthy and target group passes health checks.</td></tr>
+<tr><td>New deployment fails health check</td><td>Deployment circuit breaker rollback.</td><td>Only rollback to known previous image; no schema destructive changes.</td><td>Old version healthy, error rate returns to baseline.</td></tr>
+<tr><td>CPU sustained high</td><td>Scale service within configured min/max.</td><td>Hard maximum and budget alarm; avoid unbounded scale.</td><td>CPU and p95 recover; record scale event.</td></tr>
+<tr><td>Backup job fails</td><td>One bounded retry, then page/notify.</td><td>No repeated infinite retries; never delete old good backups.</td><td>Backup artifact exists and verification passes.</td></tr>
+<tr><td>Database saturation</td><td>Alert and optionally shed non-critical/report workload.</td><td>No automatic DB restart, failover or data restore without approval.</td><td>Connections/latency recover and data path remains correct.</td></tr>
+</tbody></table>
+<h3>Minimum implementation design</h3>
+<ul>
+<li>Use native controls first: ECS health replacement, deployment circuit breaker, autoscaling, RDS automated backups and CloudWatch alarms.</li>
+<li>For custom remediation, create a small event handler/Lambda or workflow with an explicit allowlist of actions.</li>
+<li>Policy includes: trigger threshold and duration, eligible environment, eligible service, max attempts, cooldown, maximum capacity, tenant blast radius, approval requirement and verification condition.</li>
+<li>Idempotency key prevents duplicate actions. Store remediation events and outcomes in an append-only audit log.</li>
+<li>Dry-run mode must show the proposed action without executing it.</li>
+<li>Kill switch disables custom remediation globally. Manual override is documented.</li>
+<li>Never let an LLM decide or execute high-impact production actions. If AI-assisted diagnosis is added later, it may summarize evidence and recommend an action; deterministic policy and human approval control execution.</li>
+</ul>
+<h3>Demo script</h3>
+<ol><li>Show normal service health and Autopilot dry-run status.</li><li>Trigger a safe staging-only fault, such as a failing deployment health check.</li><li>Show detection, policy decision and rollback event.</li><li>Show post-action health verification and audit record.</li><li>Show that a prohibited action is blocked and requires approval.</li></ol>
+<div class="notice"><b>Positioning:</b> Present this as “Reliability Autopilot — a small policy-driven remediation layer.” Explain that you deliberately chose deterministic controls over an autonomous LLM because customer data, database integrity and financial workloads require bounded and auditable actions.</div>
+</section>
+
+<section class="card" id="evidence">
+<h2>14. Evidence and final acceptance checklist</h2>
+<p>Keep evidence under <code>docs/evidence/</code>. Save sanitized command output, test reports, screenshots and timestamps. Do not include credentials or sensitive customer data.</p>
+<div class="checklist">
+<h3>Repository and reproducibility</h3>
+<label><input type="checkbox"> README starts with architecture diagram and prerequisites.</label>
+<label><input type="checkbox"> One documented path provisions platform from clean account (or clearly states local-only limitation).</label>
+<label><input type="checkbox"> Staging and production use same IaC modules.</label>
+<label><input type="checkbox"> AI tools used are disclosed in README.</label>
+<label><input type="checkbox"> Time log, priorities, trade-offs and unfinished work documented.</label>
+<h3>Security</h3>
+<label><input type="checkbox"> No default secrets or credentials in source, image or repository.</label>
+<label><input type="checkbox"> Authenticated tenant identity; header cannot switch tenant.</label>
+<label><input type="checkbox"> SQL injection fixed and tests added.</label>
+<label><input type="checkbox"> Record-level access scoped to tenant.</label>
+<label><input type="checkbox"> Automated negative tenant isolation tests pass in CI.</label>
+<label><input type="checkbox"> Admin RBAC, audit trail and redacted logs implemented.</label>
+<label><input type="checkbox"> TLS and at-rest encryption configuration verified.</label>
+<label><input type="checkbox"> Delta questionnaire accurately distinguishes implemented/planned.</label>
+<h3>Operations and delivery</h3>
+<label><input type="checkbox"> Metrics, structured logs and traces are tenant-aware.</label>
+<label><input type="checkbox"> Dashboard filters to individual tenant.</label>
+<label><input type="checkbox"> SLOs and three useful alerts documented and tested.</label>
+<label><input type="checkbox"> Error-budget policy completed.</label>
+<label><input type="checkbox"> CI runs tests, dependency scan, container scan and isolation tests.</label>
+<label><input type="checkbox"> Rollback tested; schema change strategy documented.</label>
+<label><input type="checkbox"> Backup restore measured; actual RTO/RPO recorded.</label>
+<label><input type="checkbox"> k6 results and Cobalt noisy-neighbour before/after recorded.</label>
+<label><input type="checkbox"> Three runbooks, PIR, cost model and 90-day plan completed.</label>
+<label><input type="checkbox"> Cloud spend screenshot captured; billing alert active.</label>
+<label><input type="checkbox"> Endpoint and test keys shared only through approved secure method.</label>
+<label><input type="checkbox"> Live environment remains available for review; teardown plan set for within 48 hours after session.</label>
+</div>
+</section>
+
+<section class="card" id="cursor">
+<h2>15. Cursor master instructions</h2>
+<p>Paste this into Cursor Agent at the start of the implementation. It is intentionally strict: Cursor must inspect the supplied repository and assessment assets before generating architecture or modifying files.</p>
+<pre>You are my senior platform/reliability engineering pair for the Ledgerline
+multi-tenant SaaS assessment.
+
+PRIMARY OBJECTIVE
+Turn the supplied fragile FastAPI + PostgreSQL reference application into a
+secure, observable, automated and recoverable multi-tenant platform. Follow
+the assessment PDF requirements exactly. This HTML playbook is an execution
+guide, but the PDF is the source of truth if there is any conflict.
+
+NON-NEGOTIABLE RULES
+1. Start by inspecting the entire repository, supplied PDF/resources, existing
+   code, seed script, k6 script and security questionnaire. Do not assume
+   filenames or cloud resources.
+2. Do not overwrite or delete supplied assets. Preserve original scripts and
+   create modified copies when needed.
+3. Do not deploy, apply Terraform, create billable resources, expose a public
+   endpoint or run a production load test until I explicitly approve the
+   provider, region, spend cap and exact plan.
+4. Never put credentials, private keys, tenant tokens, real customer data or
+   .env values in Git, logs, screenshots or generated docs.
+5. Use only synthetic/seed data.
+6. Do not claim something works unless a test or real verification proves it.
+   Label each item: implemented, locally tested, cloud deployed, cloud
+   verified, planned, or blocked.
+7. Do not overengineer. Prefer managed services and a modular monolith unless
+   a real requirement justifies more complexity.
+8. Preserve the assessment's six tasks and produce every requested document.
+9. AI assistance is permitted by the assessment. Add a truthful README section
+   describing AI use. I must understand and be able to modify every component.
+10. Before any destructive action, explain impact and ask for approval.
+
+WORKING METHOD
+- First produce an inventory and a gap analysis mapped to Tasks 1–6.
+- Identify all deliberate and incidental flaws in the reference app.
+- Propose a small, cost-aware architecture and record assumptions.
+- Break work into short phases with acceptance tests.
+- Implement one phase at a time. After each phase: run tests, show exact
+  results, update STATUS.md and evidence, then ask me to approve the next phase.
+- Keep the default branch runnable.
+- Use small, meaningful commits. Do not push secrets or force-push.
+- Maintain docs/decisions/ ADRs for important trade-offs.
+- Keep a known-gaps list. Do not hide unfinished work.
+
+REQUIRED DELIVERABLES
+Task 1: Terraform/IaC, staging and production, shared/dedicated tenant
+onboarding, Acme/Brightpath shared, Delta dedicated, Acme migration plan and
+seed-data demonstration.
+Task 2: SECURITY.md, real authentication, server-derived tenant identity,
+tenant isolation tests in CI, secret manager, least privilege, encryption,
+admin audit trail, honest Delta questionnaire.
+Task 3: tenant-aware metrics/logs/traces, filterable dashboard, availability
+and latency SLOs, at least 3 actionable alerts, error-budget policy.
+Task 4: CI tests + dependency/container scan + isolation test, safe deployment,
+one-step rollback, expand/contract schema changes, tenant canary rollout.
+Task 5: automated backups, fresh-instance restore evidence with RTO/RPO,
+k6 200 RPS/10 min target and p95 /records <300ms, Cobalt noisy-neighbour
+before/after, bottleneck write-up.
+Task 6: onboarding, restore and incident runbooks; blameless PIR; shared and
+dedicated monthly cost model; <=2 page 90-day plan.
+
+ARCHITECTURE GUIDANCE
+AWS is a proposed default only if the approved budget supports it. Consider
+VPC, private app/database networking, ALB, ECS Fargate, PostgreSQL/RDS,
+Secrets Manager, KMS, CloudWatch/OpenTelemetry, ECR and GitHub Actions OIDC.
+Keep Terraform modules reusable across staging and production. Make tenant
+routing server-side. For shared tier enforce tenant scope and consider
+PostgreSQL RLS; for dedicated tier use a separate database and dedicated key
+as actually required. Granite's region isolation is a separate stretch goal
+unless time permits.
+
+SECURITY REQUIREMENTS
+Never trust X-Tenant-Id as authorization. Derive tenant from authenticated
+principal. Fix SQL injection, unscoped record access, insecure admin auth,
+secret logging, default credentials, missing transactions/connection
+management and container hardening. Add negative tests for read/update/delete,
+search and reports across tenants. Avoid logging payloads or credentials.
+
+OBSERVABILITY REQUIREMENTS
+Use structured logs with request_id, trace_id, service, env, route, status,
+duration and safe tenant context. Avoid high-cardinality metrics. Add traces
+for request, auth, tenant resolution and DB calls. Propose SLOs; clearly label
+targets as proposed until sufficient measurement exists. Alert only on
+sustained actionable conditions.
+
+RELIABILITY AUTOPILOT ADD-ON
+Only after all core assessment tasks are in a credible state, implement a
+small policy-driven self-healing extension. Prefer native ECS health
+replacement, deployment circuit breaker rollback, bounded autoscaling and
+backup retry. Custom actions must be allowlisted, idempotent, rate-limited,
+cooldown-protected, audited, reversible where possible and verified after
+execution. Include dry-run and kill switch. Risky/destructive actions require
+human approval. Do not allow an LLM to autonomously execute production
+changes. This add-on must not displace core requirements.
+
+OUTPUT FORMAT AFTER EACH PHASE
+1. What changed (files and purpose).
+2. Exact commands run.
+3. Test output and failures.
+4. Evidence created.
+5. Remaining gaps and risks.
+6. Estimated cost impact if cloud resources changed.
+7. What I need to understand for the live review.
+8. Ask for approval before moving to next phase.
+
+Begin with repository inspection and a gap analysis only. Do not make changes
+until you show me the inventory and proposed sequence.</pre>
+</section>
+
+<section class="card" id="prompts">
+<h2>16. Phase-by-phase Cursor prompts</h2>
+<h3>Prompt A — repository audit</h3>
+<pre>Inspect the repository and the assessment source. Do not modify files yet.
+List all files, explain how the reference app runs, identify every flaw you
+can substantiate, map each requirement to current state, and propose the
+smallest architecture that can satisfy the brief. Flag unknowns and questions
+for the company (spend cap, region, deadline, secure sharing). Output a
+prioritized implementation plan and acceptance tests.</pre>
+<h3>Prompt B — secure application core</h3>
+<pre>Implement Task 2 first. Refactor the FastAPI app with verified authentication,
+server-derived tenant context, tenant-scoped data access, parameterized SQL,
+proper admin RBAC and audit events. Add tests proving tenant A cannot list,
+search, get, modify or delete tenant B records, even if A changes the
+X-Tenant-Id header. Add readiness/liveness endpoints and safe structured
+logging. Do not add cloud infrastructure yet. Run all tests and explain the
+request path and threat model. Do not proceed until tests pass or gaps are
+explicitly documented.</pre>
+<h3>Prompt C — infrastructure and onboarding</h3>
+<pre>Implement Task 1 using the approved cloud provider and budget only. Create
+reusable IaC for staging and production, shared/dedicated tenant patterns,
+least-privilege roles, network boundaries, secret references, encryption and
+repeatable onboarding. Implement idempotent onboarding for Acme shared,
+Brightpath shared and Delta dedicated. Include plan/validate commands and
+cost estimate. Do not apply infrastructure without my explicit approval.
+Demonstrate Acme seed migration and provide a production cutover/rollback
+plan under five minutes.</pre>
+<h3>Prompt D — telemetry and SLOs</h3>
+<pre>Implement Task 3. Add tenant-aware structured logs, metrics and traces with
+safe cardinality. Create a useful platform dashboard with tenant filtering.
+Propose availability and latency SLOs, document measurement windows and
+limitations, configure at least three actionable sustained-condition alerts,
+and write the error-budget policy. Provide a test/verification method for
+each alert. Do not claim production SLO compliance based on short tests.</pre>
+<h3>Prompt E — CI/CD and safe rollout</h3>
+<pre>Implement Task 4. Build GitHub Actions with tests, dependency scan, container
+scan and tenant-isolation test on every PR. Use OIDC for cloud deployment if
+approved. Build immutable image, deploy to staging, then canary one tenant,
+verify health and promote. Add one-step application rollback and document
+expand/contract database migration. Test the rollback path. Never include
+long-lived cloud keys in repository secrets if OIDC is available.</pre>
+<h3>Prompt F — backup, load and noisy neighbour</h3>
+<pre>Implement Task 5. Add automated backups and a restore procedure to a fresh
+instance. Time the restore and calculate actual RTO/RPO. Adapt the supplied
+k6 test to the authentication implementation. Run a controlled baseline and
+Cobalt heavy-report concurrent test only after I approve cost and target.
+Record RPS, p95/p99, errors, DB saturation and per-tenant impact. Tune the
+first bottleneck and rerun. Clearly label staging versus production evidence.</pre>
+<h3>Prompt G — operations docs</h3>
+<pre>Complete Task 6: write actionable onboarding, database restore and incident
+response runbooks; a blameless PIR for the worst real issue encountered; a
+transparent shared/dedicated monthly cost model; Delta questionnaire with
+honest status; and a maximum two-page 90-day plan. Ensure a new engineer can
+follow each runbook without asking me for undocumented steps.</pre>
+<h3>Prompt H — Reliability Autopilot add-on</h3>
+<pre>Only if all core tasks are in a tested state, add a small Reliability
+Autopilot. Start with native cloud healing: unhealthy task replacement,
+deployment circuit-breaker rollback, bounded autoscaling and one bounded
+backup retry. If custom orchestration is justified, implement an allowlisted
+policy engine with dry-run, idempotency, cooldown, attempt limits, budget
+limits, audit events, post-action verification and a kill switch. Risky
+actions require human approval. Add tests for allowed and blocked actions.
+Do not use an LLM as an unrestricted production operator. Document this as
+an optional enhancement, not a core assessment requirement.</pre>
+<h3>Prompt I — final audit</h3>
+<pre>Act as a skeptical assessment reviewer. Check the repo against every line of
+the assessment checklist. Run tests and static validation. Find unsupported
+claims, missing evidence, secrets, broken commands, undocumented manual
+steps and mismatches between docs and implementation. Do not fabricate
+evidence. Produce a prioritized final gap report and a 10-minute demo script.
+Do not change code until you show me the findings.</pre>
+</section>
+
+<section class="card" id="presentation">
+<h2>17. Saturday presentation — 30-minute walkthrough</h2>
+<p>The assessment's live session is two hours total: 30-minute walkthrough, 45-minute incident drill, 25-minute code/architecture deep dive and 20-minute 90-day plan discussion. The presentation should therefore be a live technical walkthrough, not a slide-only pitch.</p>
+<table><thead><tr><th>Time</th><th>Show</th><th>Message</th></tr></thead><tbody>
+<tr><td>0–3 min</td><td>Original problem and business risks</td><td>Why a single VM, trust-the-header and no tested restore are unsafe for eight clients.</td></tr>
+<tr><td>3–7 min</td><td>Architecture diagram and trade-offs</td><td>Simple, cost-aware architecture; shared/dedicated and region boundaries.</td></tr>
+<tr><td>7–12 min</td><td>Tenant onboarding and tenant inventory</td><td>One repeatable workflow; Acme/Brightpath shared, Delta dedicated.</td></tr>
+<tr><td>12–17 min</td><td>Security demo</td><td>Authenticated request, cross-tenant negative test, audit record.</td></tr>
+<tr><td>17–21 min</td><td>CI/CD and rollback</td><td>Tests/scans, canary, health verification and rollback.</td></tr>
+<tr><td>21–25 min</td><td>Observability</td><td>Tenant dashboard, SLOs and alerts.</td></tr>
+<tr><td>25–28 min</td><td>Restore and load evidence</td><td>Actual RTO/RPO, k6 numbers, noisy-neighbour before/after.</td></tr>
+<tr><td>28–30 min</td><td>Reliability Autopilot + gaps</td><td>Safe remediation add-on and honest next priorities.</td></tr>
+</tbody></table>
+<h3>Opening script</h3>
+<pre>"I approached this as an operational ownership problem rather than a
+Terraform exercise. The starting platform had a single failure domain,
+header-trusted tenant identity, manual deployments and no proven recovery.
+My priorities were to protect tenant data first, make the platform
+reproducible, and then make reliability measurable and recoverable. I'll
+show the actual evidence for each of those decisions and call out the parts
+that remain planned or constrained by the assessment time and budget."</pre>
+<h3>Closing script</h3>
+<pre>"The main outcome is a platform whose important operations are repeatable
+and whose failure modes are visible. I have deliberately kept the design
+proportional to the current team and budget. The remaining gaps are
+documented with risk and priority, and the next 90 days focus on improving
+recovery confidence, onboarding automation, capacity isolation and
+operational ownership."</pre>
+</section>
+
+<section class="card" id="incident">
+<h2>18. Live incident drill preparation</h2>
+<p>The exact incident is not disclosed in advance. Practice a consistent method rather than memorizing one fix.</p>
+<ol>
+<li><b>Clarify impact:</b> Which service/environment/tenants? When did it start? What changed? Is data/security affected?</li>
+<li><b>Establish incident role:</b> Narrate what you are checking and why. Keep a timeline.</li>
+<li><b>Check golden signals:</b> traffic, errors, latency, saturation; compare per-tenant and global views.</li>
+<li><b>Correlate:</b> request ID, trace ID, deployment version, database metrics, queue/backlog, infrastructure events.</li>
+<li><b>Form a hypothesis:</b> State evidence supporting and refuting it. Avoid random restarts.</li>
+<li><b>Mitigate safely:</b> rollback, scale within limit, throttle noisy tenant, disable a faulty non-critical path or fail over only if rehearsed.</li>
+<li><b>Verify:</b> SLO indicators recover, affected tenant confirms, no data integrity regression.</li>
+<li><b>Close the loop:</b> communicate impact, preserve evidence, write follow-up action.</li>
+</ol>
+<h3>Commands to know (adapt to actual deployment)</h3>
+<pre># ECS service and task status
+aws ecs describe-services --cluster &lt;cluster&gt; --services &lt;service&gt;
+aws ecs list-tasks --cluster &lt;cluster&gt; --service-name &lt;service&gt;
+
+# Recent service logs
+aws logs tail &lt;log-group&gt; --since 15m --follow
+
+# Recent ECS service events
+aws ecs describe-services --cluster &lt;cluster&gt; --services &lt;service&gt; \
+  --query 'services[0].events[:10]'
+
+# Terraform inspection — do not apply blindly
+terraform fmt -check -recursive
+terraform validate
+terraform plan
+
+# Local API smoke checks
+curl -fsS https://&lt;endpoint&gt;/health
+curl -fsS https://&lt;endpoint&gt;/ready</pre>
+<p>Do not run destructive database, IAM, KMS or networking commands during the drill without confirming target, impact and rollback. Explain the command before executing it.</p>
+</section>
+
+<section class="card" id="risks">
+<h2>19. Risks, scope control and honest communication</h2>
+<table><thead><tr><th>Risk</th><th>Mitigation</th></tr></thead><tbody>
+<tr><td>Unfilled spend cap / reimbursement placeholders.</td><td>Ask HR/recruiter for limit. Set budget alert. Do not provision billable services before approval.</td></tr>
+<tr><td>Scope too large for available hours.</td><td>Prioritize security, tenant isolation, restore, observability, onboarding and CI. Defer stretch goals transparently.</td></tr>
+<tr><td>Cloud resources become expensive or publicly exposed.</td><td>Private networking, narrow security groups, budgets, small instance sizing, teardown plan.</td></tr>
+<tr><td>Cursor creates untested or excessive code.</td><td>Small phases, inspect diffs, run tests after each change, require explanations.</td></tr>
+<tr><td>Metric cardinality and sensitive logs.</td><td>Bound labels; avoid payload, user, record and token values; redact structured fields.</td></tr>
+<tr><td>Self-healing creates an incident.</td><td>Native actions first; allowlist, dry-run, cooldown, max attempts, kill switch and human approval.</td></tr>
+<tr><td>Claims exceed proof.</td><td>Use evidence status labels and state what was not completed.</td></tr>
+<tr><td>Live session environment not available.</td><td>Keep only approved resources running, monitor spend, document endpoint and teardown deadline.</td></tr>
+</tbody></table>
+<h3>How to describe incomplete work</h3>
+<p>Use: “Implemented and tested locally; not deployed to cloud due to the confirmed assessment budget/time constraint.” Or: “Designed and documented; not implemented. The remaining risk is X; next step is Y.” This is stronger than implying the requirement is complete.</p>
+</section>
+
+<section class="card" id="decisions">
+<h2>20. Decision log template</h2>
+<p>Create one short ADR for each major decision. Use this template in <code>docs/decisions/</code>.</p>
+<pre># ADR-00X: &lt;Decision title&gt;
+
+Status: Proposed | Accepted | Superseded
+Date:
+Context:
+What problem are we solving?
+
+Decision:
+What did we choose?
+
+Alternatives considered:
+- Option A:
+- Option B:
+
+Why this choice:
+Cost:
+Security impact:
+Reliability impact:
+Operational burden:
+Tenant impact:
+
+Consequences and risks:
+What becomes easier? What becomes harder?
+
+Verification:
+Which test, metric, command or evidence proves this works?
+
+Follow-up:
+Owner:
+Target date:</pre>
+<h3>Candidate decisions to record</h3>
+<ul>
+<li>Shared tenant isolation model (application filters, PostgreSQL RLS, schemas, or combination).</li>
+<li>Dedicated tenant boundary and key management.</li>
+<li>Deployment compute choice (ECS Fargate vs alternatives).</li>
+<li>Database topology and connection pooling.</li>
+<li>Authentication mechanism and tenant resolution.</li>
+<li>Observability stack and metric cardinality strategy.</li>
+<li>Backup frequency, retention and restore procedure.</li>
+<li>Safe self-healing boundaries.</li>
+</ul>
+</section>
+
+<div class="card">
+<h2>Final operating instruction</h2>
+<p><b>Build the required platform first. Prove security and recovery. Make it observable. Automate delivery and onboarding. Only then add Reliability Autopilot.</b></p>
+<p>The best submission is not the one with the most components. It is the one a future engineer can deploy, operate, troubleshoot and trust—with clear evidence and no unsupported claims.</p>
+<div class="notice success">Before the Saturday review, you should be able to answer for every major component: What does it do? Why is it there? What can fail? How do we detect that? How do we recover? What did we actually test?</div>
+</div>
+</main>
+</div>
+<div class="footer">Ledgerline Assessment Build Playbook · Prepared as a working reference for Cursor and the candidate · Source of truth: supplied Predixion AI assessment PDF</div>
+</div>
+</body>
+</html>

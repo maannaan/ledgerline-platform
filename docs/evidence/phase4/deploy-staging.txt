@@ -1,0 +1,371 @@
+Login Succeeded
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 160B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.12
+#2 DONE 2.4s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/4] FROM docker.io/library/python:3.12@sha256:17b9724493d916f56565c131f389faff2597f46dec6ce09516f95125bc9f519f
+#4 resolve docker.io/library/python:3.12@sha256:17b9724493d916f56565c131f389faff2597f46dec6ce09516f95125bc9f519f 0.0s done
+#4 DONE 0.1s
+
+#5 [internal] load build context
+#5 transferring context: 468B done
+#5 DONE 0.0s
+
+#6 [2/4] WORKDIR /app
+#6 CACHED
+
+#7 [3/4] COPY . .
+#7 CACHED
+
+#8 [4/4] RUN pip install -r requirements.txt
+#8 CACHED
+
+#9 exporting to image
+#9 exporting layers
+#9 exporting layers 0.0s done
+#9 exporting manifest sha256:d9e96d0fb3f4a79424beb53c1d761d1099c4389bf686992424cf49ab46301516 done
+#9 exporting config sha256:f8d7c58944531f89df32c46e8d2eac2f45893a065a21d4af420a520c7bb0fce8 done
+#9 exporting attestation manifest sha256:6cebf43603079a87ac4271620c2bc9a700b233b8db8a2262bdcf36710144a030 0.0s done
+#9 exporting manifest list sha256:6db262ca3701ff2f094d90184017246143acd8e1ffb839878b76b59a19afb2a0 0.0s done
+#9 naming to 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api:manual
+#9 naming to 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api:manual done
+#9 unpacking to 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api:manual 0.0s done
+#9 naming to 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api:latest done
+#9 unpacking to 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api:latest 0.0s done
+#9 DONE 0.4s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - JSONArgsRecommended: JSON arguments recommended for CMD to prevent unintended behavior related to OS signals (line 5)
+The push refers to repository [660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api]
+c4c323982787: Waiting
+5fa694e7d746: Waiting
+542d85340f5b: Waiting
+7df3eabe14ec: Waiting
+a1d156b0aab5: Waiting
+0a25970eadea: Waiting
+dc161de3ddb4: Waiting
+425148f8d5eb: Waiting
+7fac3b752bd4: Waiting
+a28c119f9255: Waiting
+c0168c6e6744: Waiting
+a28c119f9255: Waiting
+c0168c6e6744: Waiting
+c4c323982787: Waiting
+5fa694e7d746: Waiting
+542d85340f5b: Waiting
+7df3eabe14ec: Waiting
+a1d156b0aab5: Waiting
+0a25970eadea: Waiting
+dc161de3ddb4: Waiting
+425148f8d5eb: Waiting
+7fac3b752bd4: Waiting
+a28c119f9255: Waiting
+c0168c6e6744: Waiting
+c4c323982787: Waiting
+5fa694e7d746: Waiting
+542d85340f5b: Waiting
+7df3eabe14ec: Waiting
+a1d156b0aab5: Waiting
+0a25970eadea: Waiting
+dc161de3ddb4: Waiting
+425148f8d5eb: Waiting
+7fac3b752bd4: Waiting
+dc161de3ddb4: Waiting
+425148f8d5eb: Waiting
+7fac3b752bd4: Waiting
+a28c119f9255: Waiting
+c0168c6e6744: Waiting
+c4c323982787: Waiting
+5fa694e7d746: Waiting
+542d85340f5b: Waiting
+7df3eabe14ec: Waiting
+a1d156b0aab5: Waiting
+0a25970eadea: Waiting
+a28c119f9255: Waiting
+c0168c6e6744: Waiting
+c4c323982787: Waiting
+5fa694e7d746: Waiting
+542d85340f5b: Waiting
+7df3eabe14ec: Waiting
+a1d156b0aab5: Waiting
+0a25970eadea: Waiting
+dc161de3ddb4: Waiting
+425148f8d5eb: Waiting
+7fac3b752bd4: Waiting
+a1d156b0aab5: Waiting
+0a25970eadea: Waiting
+dc161de3ddb4: Waiting
+425148f8d5eb: Waiting
+7fac3b752bd4: Waiting
+a28c119f9255: Waiting
+c0168c6e6744: Waiting
+c4c323982787: Waiting
+5fa694e7d746: Waiting
+542d85340f5b: Waiting
+7df3eabe14ec: Waiting
+0a25970eadea: Waiting
+dc161de3ddb4: Layer already exists
+425148f8d5eb: Layer already exists
+7fac3b752bd4: Layer already exists
+a28c119f9255: Waiting
+c0168c6e6744: Layer already exists
+c4c323982787: Layer already exists
+5fa694e7d746: Waiting
+542d85340f5b: Waiting
+7df3eabe14ec: Layer already exists
+a1d156b0aab5: Layer already exists
+0a25970eadea: Waiting
+a28c119f9255: Layer already exists
+5fa694e7d746: Layer already exists
+542d85340f5b: Layer already exists
+0a25970eadea: Pushed
+manual: digest: sha256:6db262ca3701ff2f094d90184017246143acd8e1ffb839878b76b59a19afb2a0 size: 856
+The push refers to repository [660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api]
+7fac3b752bd4: Waiting
+a1d156b0aab5: Waiting
+c0168c6e6744: Waiting
+5fa694e7d746: Waiting
+7df3eabe14ec: Waiting
+c4c323982787: Waiting
+dc161de3ddb4: Waiting
+542d85340f5b: Waiting
+0a25970eadea: Waiting
+a28c119f9255: Waiting
+425148f8d5eb: Waiting
+0a25970eadea: Waiting
+a28c119f9255: Waiting
+425148f8d5eb: Waiting
+7fac3b752bd4: Waiting
+a1d156b0aab5: Waiting
+c0168c6e6744: Waiting
+5fa694e7d746: Waiting
+7df3eabe14ec: Waiting
+c4c323982787: Waiting
+dc161de3ddb4: Waiting
+542d85340f5b: Waiting
+a1d156b0aab5: Waiting
+c0168c6e6744: Waiting
+5fa694e7d746: Waiting
+7df3eabe14ec: Waiting
+c4c323982787: Waiting
+dc161de3ddb4: Waiting
+542d85340f5b: Waiting
+0a25970eadea: Waiting
+a28c119f9255: Waiting
+425148f8d5eb: Waiting
+7fac3b752bd4: Waiting
+425148f8d5eb: Waiting
+7fac3b752bd4: Waiting
+a1d156b0aab5: Waiting
+c0168c6e6744: Waiting
+5fa694e7d746: Waiting
+7df3eabe14ec: Waiting
+c4c323982787: Waiting
+dc161de3ddb4: Waiting
+542d85340f5b: Waiting
+0a25970eadea: Waiting
+a28c119f9255: Waiting
+7df3eabe14ec: Layer already exists
+c4c323982787: Layer already exists
+dc161de3ddb4: Waiting
+542d85340f5b: Layer already exists
+0a25970eadea: Already exists
+a28c119f9255: Layer already exists
+425148f8d5eb: Layer already exists
+7fac3b752bd4: Layer already exists
+a1d156b0aab5: Layer already exists
+c0168c6e6744: Layer already exists
+5fa694e7d746: Layer already exists
+dc161de3ddb4: Layer already exists
+latest: digest: sha256:6db262ca3701ff2f094d90184017246143acd8e1ffb839878b76b59a19afb2a0 size: 856
+deploying 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api@sha256:6db262ca3701ff2f094d90184017246143acd8e1ffb839878b76b59a19afb2a0
+previous_taskdef=arn:aws:ecs:ap-south-1:660442155240:task-definition/ll-staging-api:2
+deployed_taskdef=arn:aws:ecs:ap-south-1:660442155240:task-definition/ll-staging-api:3
+Rollout uses ECS rolling deploy + deployment circuit breaker rollback.
+Login Succeeded
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 160B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.12
+#2 DONE 2.6s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/4] FROM docker.io/library/python:3.12@sha256:17b9724493d916f56565c131f389faff2597f46dec6ce09516f95125bc9f519f
+#4 resolve docker.io/library/python:3.12@sha256:17b9724493d916f56565c131f389faff2597f46dec6ce09516f95125bc9f519f 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 468B done
+#5 DONE 0.0s
+
+#6 [3/4] COPY . .
+#6 CACHED
+
+#7 [2/4] WORKDIR /app
+#7 CACHED
+
+#8 [4/4] RUN pip install -r requirements.txt
+#8 CACHED
+
+#9 exporting to image
+#9 exporting layers done
+#9 exporting manifest sha256:a056b51f234835135b7ef9760f04b47098aed10fd7387a37b31031dfe194b1d2 done
+#9 exporting config sha256:3b7daed2d429fb34bd881205ca044398ebccfdc641f7a1d6ed09a08925cf970b done
+#9 exporting attestation manifest sha256:7fff7eee2754b5ed84b5f495099c7ae1b193a37cc840cb707d8500e691451d86
+#9 exporting attestation manifest sha256:7fff7eee2754b5ed84b5f495099c7ae1b193a37cc840cb707d8500e691451d86 0.0s done
+#9 exporting manifest list sha256:7e8ca92fe74ab209701277fabc2d6e43d0930386124ac47422de8c6b25c3c398 0.0s done
+#9 naming to 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api:phase4 done
+#9 unpacking to 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api:phase4 0.0s done
+#9 naming to 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api:latest done
+#9 unpacking to 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api:latest 0.0s done
+#9 DONE 0.3s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - JSONArgsRecommended: JSON arguments recommended for CMD to prevent unintended behavior related to OS signals (line 5)
+The push refers to repository [660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api]
+a1d156b0aab5: Waiting
+542d85340f5b: Waiting
+dc161de3ddb4: Waiting
+5fa694e7d746: Waiting
+c0168c6e6744: Waiting
+425148f8d5eb: Waiting
+272a995b5c60: Waiting
+7d0331ef4deb: Waiting
+7df3eabe14ec: Waiting
+7fac3b752bd4: Waiting
+c4c323982787: Waiting
+5fa694e7d746: Waiting
+c0168c6e6744: Waiting
+425148f8d5eb: Waiting
+272a995b5c60: Waiting
+7d0331ef4deb: Waiting
+7df3eabe14ec: Waiting
+7fac3b752bd4: Waiting
+c4c323982787: Waiting
+a1d156b0aab5: Waiting
+542d85340f5b: Waiting
+dc161de3ddb4: Waiting
+c0168c6e6744: Waiting
+425148f8d5eb: Waiting
+272a995b5c60: Waiting
+7d0331ef4deb: Waiting
+7df3eabe14ec: Waiting
+7fac3b752bd4: Waiting
+c4c323982787: Waiting
+a1d156b0aab5: Waiting
+542d85340f5b: Waiting
+dc161de3ddb4: Waiting
+5fa694e7d746: Waiting
+a1d156b0aab5: Waiting
+542d85340f5b: Waiting
+dc161de3ddb4: Waiting
+5fa694e7d746: Waiting
+c0168c6e6744: Waiting
+425148f8d5eb: Waiting
+272a995b5c60: Waiting
+7d0331ef4deb: Waiting
+7df3eabe14ec: Waiting
+7fac3b752bd4: Waiting
+c4c323982787: Waiting
+7d0331ef4deb: Waiting
+7df3eabe14ec: Waiting
+7fac3b752bd4: Waiting
+c4c323982787: Waiting
+a1d156b0aab5: Waiting
+542d85340f5b: Waiting
+dc161de3ddb4: Waiting
+5fa694e7d746: Waiting
+c0168c6e6744: Waiting
+425148f8d5eb: Waiting
+272a995b5c60: Waiting
+7df3eabe14ec: Waiting
+7fac3b752bd4: Waiting
+c4c323982787: Waiting
+a1d156b0aab5: Waiting
+542d85340f5b: Waiting
+dc161de3ddb4: Waiting
+5fa694e7d746: Waiting
+c0168c6e6744: Waiting
+425148f8d5eb: Waiting
+272a995b5c60: Waiting
+7d0331ef4deb: Waiting
+272a995b5c60: Waiting
+7d0331ef4deb: Layer already exists
+7df3eabe14ec: Layer already exists
+7fac3b752bd4: Waiting
+c4c323982787: Layer already exists
+a1d156b0aab5: Waiting
+542d85340f5b: Waiting
+dc161de3ddb4: Waiting
+5fa694e7d746: Waiting
+c0168c6e6744: Waiting
+425148f8d5eb: Layer already exists
+7fac3b752bd4: Layer already exists
+a1d156b0aab5: Layer already exists
+542d85340f5b: Layer already exists
+dc161de3ddb4: Layer already exists
+5fa694e7d746: Layer already exists
+c0168c6e6744: Layer already exists
+272a995b5c60: Pushed
+phase4: digest: sha256:7e8ca92fe74ab209701277fabc2d6e43d0930386124ac47422de8c6b25c3c398 size: 856
+The push refers to repository [660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api]
+c4c323982787: Waiting
+dc161de3ddb4: Waiting
+5fa694e7d746: Waiting
+542d85340f5b: Waiting
+272a995b5c60: Waiting
+425148f8d5eb: Waiting
+a1d156b0aab5: Waiting
+7fac3b752bd4: Waiting
+7d0331ef4deb: Waiting
+c0168c6e6744: Waiting
+7df3eabe14ec: Waiting
+272a995b5c60: Waiting
+425148f8d5eb: Waiting
+a1d156b0aab5: Waiting
+7fac3b752bd4: Waiting
+7d0331ef4deb: Waiting
+c0168c6e6744: Waiting
+7df3eabe14ec: Waiting
+c4c323982787: Waiting
+dc161de3ddb4: Waiting
+5fa694e7d746: Waiting
+542d85340f5b: Waiting
+a1d156b0aab5: Waiting
+7fac3b752bd4: Waiting
+7d0331ef4deb: Waiting
+c0168c6e6744: Layer already exists
+7df3eabe14ec: Waiting
+c4c323982787: Layer already exists
+dc161de3ddb4: Layer already exists
+5fa694e7d746: Waiting
+542d85340f5b: Layer already exists
+272a995b5c60: Waiting
+425148f8d5eb: Waiting
+5fa694e7d746: Layer already exists
+272a995b5c60: Already exists
+425148f8d5eb: Layer already exists
+a1d156b0aab5: Layer already exists
+7fac3b752bd4: Layer already exists
+7d0331ef4deb: Layer already exists
+7df3eabe14ec: Layer already exists
+latest: digest: sha256:7e8ca92fe74ab209701277fabc2d6e43d0930386124ac47422de8c6b25c3c398 size: 856
+deploying 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api@sha256:7e8ca92fe74ab209701277fabc2d6e43d0930386124ac47422de8c6b25c3c398
+previous_taskdef=arn:aws:ecs:ap-south-1:660442155240:task-definition/ll-staging-api:3
+deployed_taskdef=arn:aws:ecs:ap-south-1:660442155240:task-definition/ll-staging-api:4
+Rollout uses ECS rolling deploy + deployment circuit breaker rollback.

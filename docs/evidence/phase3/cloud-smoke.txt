@@ -1,0 +1,5 @@
+region=ap-south-1
+alb=http://ll-staging-alb-1605781679.ap-south-1.elb.amazonaws.com
+health=ok ready=ok
+bootstrap=done
+spoof_test=see body above

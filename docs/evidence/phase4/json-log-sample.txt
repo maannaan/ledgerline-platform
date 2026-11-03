@@ -1,0 +1,5 @@
+api-1  | {"ts": "2026-11-03T08:51:12.984138+00:00", "level": "INFO", "logger": "ledgerline", "msg": "ledgerline_startup schema_ready=true", "env": "local"}
+api-1  | INFO:     Application startup complete.
+api-1  | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+api-1  | {"ts": "2026-11-03T08:51:19.422548+00:00", "level": "INFO", "logger": "ledgerline", "msg": "request_complete", "request_id": "8024bb19-1975-4509-81b5-976c3396c9f5", "trace_id": "8024bb19-1975-4509-81b5-976c3396c9f5", "tenant": "none", "route": "/metrics", "method": "GET", "status": 200, "duration_ms": 2.61, "env": "local"}
+api-1  | {"ts": "2026-11-03T08:51:19.454466+00:00", "level": "INFO", "logger": "ledgerline", "msg": "request_complete", "request_id": "87e2b4a4-3212-4a17-b523-72a288764ab5", "trace_id": "87e2b4a4-3212-4a17-b523-72a288764ab5", "tenant": "acme", "route": "/records", "method": "POST", "status": 201, "duration_ms": 7.96, "env": "local"}

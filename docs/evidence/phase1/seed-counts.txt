@@ -1,0 +1,7 @@
+ tenant_id  | count 
+------------+-------
+ acme       | 20001
+ brightpath |     2
+ cobalt     |  5000
+(3 rows)
+

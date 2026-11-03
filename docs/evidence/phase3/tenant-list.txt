@@ -1,0 +1,20 @@
+./infra/scripts/tenant_list.sh "staging"
+=== Manifest /Users/apple/Desktop/Manan/ledgerline-platform/infra/tenants/staging.json ===
+{
+    "shared_tenants": [
+        "acme",
+        "brightpath",
+        "cobalt",
+        "harbor"
+    ],
+    "dedicated_tenants": {
+        "delta": {
+            "notes": "Delta Finance \u2014 dedicated DB + KMS key + admin audit",
+            "instance_class": "db.t4g.micro",
+            "backup_retention_days": 7
+        }
+    }
+}
+
+=== Terraform output tenant_inventory (if state exists) ===
+(no state/output yet — expected before first apply)

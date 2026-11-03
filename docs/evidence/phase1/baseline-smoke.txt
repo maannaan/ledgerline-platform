@@ -1,0 +1,80 @@
+=== TIMESTAMP 2026-11-03T07:50:11Z ===
+=== COMPOSE PS ===
+NAME                        IMAGE                     COMMAND                  SERVICE   CREATED              STATUS              PORTS
+ledgerline-platform-api-1   ledgerline-platform-api   "/bin/sh -c 'uvicorn…"   api       About a minute ago   Up 26 seconds       0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+ledgerline-platform-db-1    postgres:16               "docker-entrypoint.s…"   db        About a minute ago   Up About a minute   0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp
+
+=== HEALTH ===
+HTTP/1.1 200 OK
+date: Tue, 03 Nov 2026 07:50:10 GMT
+server: uvicorn
+content-length: 15
+content-type: application/json
+
+
+{"status":"ok"}
+
+=== CREATE ACME RECORD ===
+HTTP/1.1 200 OK
+date: Tue, 03 Nov 2026 07:50:10 GMT
+server: uvicorn
+content-length: 8
+content-type: application/json
+
+
+{"id":1}
+ACME_ID=1
+
+=== CREATE BRIGHTPATH RECORDS ===
+{"id":2}
+BP_ID=3
+
+=== LIST AS ACME (should not include brightpath payloads ideally - shared query by header only) ===
+[{"id":1,"payload":{"sku":"SKU-001","amount":42.5},"created_at":"2026-11-03T07:50:11.728063+00:00"}]
+
+=== FLAW: CROSS-TENANT GET (no auth; fetch brightpath id while pretending nothing) ===
+HTTP/1.1 200 OK
+date: Tue, 03 Nov 2026 07:50:11 GMT
+server: uvicorn
+content-length: 76
+content-type: application/json
+
+
+{"id":3,"tenant_id":"brightpath","payload":{"sku":"SKU-SECRET","amount":11}}
+
+=== FLAW: HEADER SPOOF (anyone can set X-Tenant-Id: brightpath) ===
+[{"id":3,"payload":{"sku":"SKU-SECRET","amount":11},"created_at":"2026-11-03T07:50:11.916430+00:00"},{"id":2,"payload":{"sku":"SKU-BP","amount":99},"created_at":"2026-11-03T07:50:11.872103+00:00"}]
+
+=== FLAW: SQLI — search payload interpolated into SQL ===
+HTTP/1.1 200 OK
+date: Tue, 03 Nov 2026 07:50:11 GMT
+server: uvicorn
+content-length: 296
+content-type: application/json
+
+
+[{"id":1,"payload":{"sku":"SKU-001","amount":42.5},"created_at":"2026-11-03T07:50:11.728063+00:00"},{"id":2,"payload":{"sku":"SKU-BP","amount":99},"created_at":"2026-11-03T07:50:11.872103+00:00"},{"id":3,"payload":{"sku":"SKU-SECRET","amount":11},"created_at":"2026-11-03T07:50:11.916430+00:00"}]
+
+=== FLAW: ADMIN unauthorized returns HTTP 200 ===
+HTTP/1.1 200 OK
+date: Tue, 03 Nov 2026 07:50:11 GMT
+server: uvicorn
+content-length: 24
+content-type: application/json
+
+
+{"error":"unauthorized"}
+
+=== FLAW: ADMIN default token + token logged ===
+{"id":4}
+{"deleted":"throwaway"}
+=== API LOGS containing token ===
+api-1  | ERROR:    Traceback (most recent call last):
+api-1  | ERROR:    Application startup failed. Exiting.
+api-1  | INFO:     Application startup complete.
+api-1  | deleted tenant throwaway using token letmein
+
+=== IMAGE / COMPOSE FLAWS (static) ===
+DB published on 0.0.0.0:5432
+Default creds admin/admin123 in compose and code defaults
+Dockerfile USER not set (runs as root); pip as root warning during build

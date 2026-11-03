@@ -1,0 +1,33 @@
+services:
+  api:
+    build: ./app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      # Host-side seed script may override; container must use service DNS name.
+      DATABASE_URL: postgresql://admin:admin123@db:5432/ledgerline
+      ENVIRONMENT: local
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: on-failure
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: ledgerline
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d ledgerline"]
+      interval: 2s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  pgdata:

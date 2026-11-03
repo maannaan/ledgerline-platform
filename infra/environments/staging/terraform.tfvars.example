@@ -1,0 +1,7 @@
+aws_region         = "ap-south-1"
+environment        = "staging"
+budget_limit_usd   = "75"
+budget_alert_emails = ["you@example.com"] # required for budget alarm module
+# alb_ingress_cidrs = ["x.x.x.x/32"]     # tighten before public demo if possible
+# container_image   = "123456789012.dkr.ecr.ap-south-1.amazonaws.com/ll-staging-api:sha-..."
+# acm_certificate_arn = "arn:aws:acm:ap-south-1:ACCOUNT:certificate/ID"  # see docs/runbooks/enable-tls.md

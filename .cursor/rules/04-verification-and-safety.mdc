@@ -1,0 +1,13 @@
+---
+description: Verification, git, and cloud safety gates
+alwaysApply: true
+---
+
+# Verification and safety
+
+- Verify before claiming completion; save evidence.
+- Ask before: `terraform apply/destroy`, production load tests, DB deletion, IAM policy expansion, public endpoint exposure.
+- Set billing alarms before billable resources. Working budget: target ~$25–40 / soft max $75 / hard check $100 against ~$170 credits; 3–4 day cloud window.
+- Never commit `.env`, keys, tfstate secrets, real PII.
+- Git root is this repo only. No nested repos. No force-push. Commit/push only when user asks.
+- Statuses TESTED/CLOUD_VERIFIED require actual evidence paths in the requirements matrix.

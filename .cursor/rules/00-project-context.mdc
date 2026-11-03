@@ -1,0 +1,15 @@
+---
+description: Persistent Ledgerline assessment project context for every session
+alwaysApply: true
+---
+
+# Project context
+
+- Repo: ledgerline-platform (Predixion AI founding reliability engineer assessment).
+- Authoritative brief: `assessment/source/Founding Engineer 1-Week Live Assessment.pdf`.
+- Implementation guide: `assessment/source/ledgerline_assessment_cursor_playbook.html`.
+- Start every session by reading `assessment/CURRENT_STATE.md`.
+- Trace work to requirement IDs in `assessment/REQUIREMENTS_MATRIX.md`.
+- Preserve `assessment/DECISION_LOG.md`; do not silently reverse prior decisions.
+- Founder presentation is high priority — keep `docs/FOUNDER_BRIEFING.md` and demo docs current.
+- Do not fabricate evidence. Depth on security + reliability beats unfinished breadth.

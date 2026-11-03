@@ -1,0 +1,18 @@
+---
+description: Keep work explainable for Saturday founder defense
+alwaysApply: true
+---
+
+# Founder readiness
+
+For every major feature, be ready to explain: what/why, files/functions, happy path, failure path, detection, recovery, tests, alternatives, limitations.
+
+Maintain:
+
+- `docs/FOUNDER_BRIEFING.md`
+- `docs/IMPLEMENTATION_WALKTHROUGH.md`
+- `docs/TECHNICAL_QA.md`
+- `docs/DEMO_RUNBOOK.md`
+- `docs/DAILY_PROGRESS.md`
+
+Do not fabricate demo output. Prefer real commands and saved evidence under `docs/evidence/`.

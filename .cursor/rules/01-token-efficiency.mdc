@@ -1,0 +1,15 @@
+---
+description: Token and context efficiency rules for Ledgerline work
+alwaysApply: true
+---
+
+# Token efficiency
+
+- Never reread the entire repository by default.
+- Never repeatedly summarize the full assessment.
+- Prefer `CURRENT_STATE.md` + targeted requirement IDs + targeted file reads.
+- Use search for needles; avoid printing entire large files.
+- Prefer concise diffs and targeted test output.
+- Do not regenerate existing docs unless content changed.
+- Avoid unrelated refactors and premature future features.
+- Autopilot / stretch work only after core gates in CURRENT_STATE.

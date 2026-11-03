@@ -1,0 +1,30 @@
+# HELP python_gc_objects_collected_total Objects collected during gc
+# TYPE python_gc_objects_collected_total counter
+# HELP python_gc_objects_uncollectable_total Uncollectable objects found during GC
+# TYPE python_gc_objects_uncollectable_total counter
+# HELP python_gc_collections_total Number of times this generation was collected
+# TYPE python_gc_collections_total counter
+# HELP python_info Python platform information
+# TYPE python_info gauge
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+# HELP process_open_fds Number of open file descriptors.
+# TYPE process_open_fds gauge
+# HELP process_max_fds Maximum number of open file descriptors.
+# TYPE process_max_fds gauge
+# HELP ledgerline_http_requests_total HTTP requests
+# TYPE ledgerline_http_requests_total counter
+ledgerline_http_requests_total{endpoint="/ready",method="GET",status_class="2xx",tenant="none"} 25.0
+ledgerline_http_requests_total{endpoint="/health",method="GET",status_class="2xx",tenant="none"} 13.0
+# HELP ledgerline_http_requests_created HTTP requests
+# TYPE ledgerline_http_requests_created gauge
+ledgerline_http_requests_created{endpoint="/ready",method="GET",status_class="2xx",tenant="none"} 1.7936972962736907e+09
+ledgerline_http_requests_created{endpoint="/health",method="GET",status_class="2xx",tenant="none"} 1.7936973160776477e+09
+# HELP ledgerline_http_request_duration_seconds HTTP request latency
+# TYPE ledgerline_http_request_duration_seconds histogram

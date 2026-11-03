@@ -1,0 +1,76 @@
+{
+  "widgets": [
+    {
+      "type": "text",
+      "x": 0, "y": 0, "width": 24, "height": 2,
+      "properties": {
+        "markdown": "# Ledgerline staging (ap-south-1)\nPlatform health. Filter tenant via Logs Insights query widget (`tenant` field)."
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 2, "width": 12, "height": 6,
+      "properties": {
+        "title": "ALB requests / 5xx",
+        "region": "ap-south-1",
+        "metrics": [
+          ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", "REPLACE_LB"],
+          [".", "HTTPCode_Target_5XX_Count", ".", "."]
+        ],
+        "stat": "Sum",
+        "period": 60
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12, "y": 2, "width": 12, "height": 6,
+      "properties": {
+        "title": "Target response time",
+        "region": "ap-south-1",
+        "metrics": [
+          ["AWS/ApplicationELB", "TargetResponseTime", "LoadBalancer", "REPLACE_LB"]
+        ],
+        "stat": "p95",
+        "period": 60
+      }
+    },
+    {
+      "type": "metric",
+      "x": 0, "y": 8, "width": 12, "height": 6,
+      "properties": {
+        "title": "Healthy vs unhealthy hosts",
+        "region": "ap-south-1",
+        "metrics": [
+          ["AWS/ApplicationELB", "HealthyHostCount", "TargetGroup", "REPLACE_TG", "LoadBalancer", "REPLACE_LB"],
+          [".", "UnHealthyHostCount", ".", ".", ".", "."]
+        ],
+        "stat": "Average",
+        "period": 60
+      }
+    },
+    {
+      "type": "metric",
+      "x": 12, "y": 8, "width": 12, "height": 6,
+      "properties": {
+        "title": "ECS CPU / memory",
+        "region": "ap-south-1",
+        "metrics": [
+          ["AWS/ECS", "CPUUtilization", "ServiceName", "ll-staging-api", "ClusterName", "ll-staging-cluster"],
+          [".", "MemoryUtilization", ".", ".", ".", "."]
+        ],
+        "stat": "Average",
+        "period": 60
+      }
+    },
+    {
+      "type": "log",
+      "x": 0, "y": 14, "width": 24, "height": 6,
+      "properties": {
+        "title": "Tenant-filtered request logs (edit tenant value)",
+        "region": "ap-south-1",
+        "query": "SOURCE '/ledgerline/ll-staging/api'\n| fields @timestamp, tenant, route, status, duration_ms, request_id\n| filter tenant = \"acme\"\n| sort @timestamp desc\n| limit 50",
+        "view": "table"
+      }
+    }
+  ]
+}
