@@ -58,3 +58,22 @@
 - JSON logs + Prometheus `/metrics`; CloudWatch dashboard + 3 alarms + SNS email.
 - Digest-pinned deploy + one-step rollback scripts; canary + expand/contract docs.
 - 10/10 tests still passing; staging redeployed with observability build.
+
+## 2026-11-03 — Phase 5
+
+- Evergreen-class restore drill: RTO 8.25m / RPO 6.23m; temp RDS deleted.
+- Load smoke OK; full 200 RPS exposed unbounded `/records` (~300KB) — fixed with LIMIT.
+- Tuned baseline ~120 RPS / p95 ~7.15s; Cobalt noisy isolation OK (p95 ~7.27s).
+- Bottleneck writeup + evidence under `docs/evidence/phase5/`.
+
+## 2026-11-03 — Phase 6
+
+- Completed peer-followable runbooks: onboard, restore, incident response.
+- Blameless PIR from load/list incident; cost model; ≤2-page 90-day plan + first hire.
+- Founder briefing refreshed through Phase 6.
+
+## 2026-11-03 — Phase 7
+
+- Built Reliability Autopilot: JSON policies, allowlisted actions, dry-run CLI, kill switch, audit JSONL.
+- Demo script + Make targets; 4/4 unit tests passed; evidence in `docs/evidence/phase7/`.
+- Restore remains human-gated; live cloud actions require APPROVE_AUTOPILOT=1.

@@ -25,6 +25,8 @@ class Settings:
     db_connect_timeout_s: float = 5.0
     db_statement_timeout_ms: int = 10_000
     db_pool_max_size: int = 10
+    heavy_report_max_concurrent: int = 2
+    heavy_report_statement_timeout_ms: int = 3_000
 
 
 def load_settings() -> Settings:
@@ -35,4 +37,8 @@ def load_settings() -> Settings:
         db_connect_timeout_s=float(os.getenv("DB_CONNECT_TIMEOUT_S", "5")),
         db_statement_timeout_ms=int(os.getenv("DB_STATEMENT_TIMEOUT_MS", "10000")),
         db_pool_max_size=int(os.getenv("DB_POOL_MAX_SIZE", "10")),
+        heavy_report_max_concurrent=int(os.getenv("HEAVY_REPORT_MAX_CONCURRENT", "2")),
+        heavy_report_statement_timeout_ms=int(
+            os.getenv("HEAVY_REPORT_STATEMENT_TIMEOUT_MS", "3000")
+        ),
     )

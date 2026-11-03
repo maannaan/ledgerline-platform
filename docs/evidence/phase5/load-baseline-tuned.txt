@@ -1,0 +1,18 @@
+Phase 5 — load baseline AFTER bottleneck fix (T5.2)
+====================================================
+Date: 2026-11-03
+Fix applied before this run:
+  - `/records` now honors `limit` (default 50) and skips ILIKE when search empty
+  - Was returning ~300KB unbounded lists (root cause of earlier p95 collapse)
+Config: RATE=200 DURATION=10m · 2× Fargate tasks · DB_POOL_MAX_SIZE=20
+Tenants: acme, brightpath, delta
+
+Results:
+- completed reqs: 72413 (~119.8/s) — below target arrival 200 (dropped 47588)
+- checks: 100%
+- http_req_failed: 0.00%
+- p95 `/records`: **7.15s** (SLO p95<300ms FAIL)
+- avg 3.28s / p90 6.88s
+
+Pre-fix contrast: unbounded list → p95 ~25s @ ~23 RPS.
+Post-fix: sustained ~120 RPS with 0% errors; latency still above 300ms on 256CPU tasks + t4g.micro.

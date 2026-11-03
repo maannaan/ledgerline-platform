@@ -1,0 +1,20 @@
+Phase 5 — load smoke (approved)
+================================
+Date: 2026-11-03
+Env: staging ALB http://ll-staging-alb-1605781679.ap-south-1.elb.amazonaws.com
+Tool: k6 v2.3.0
+Config: RATE=20 DURATION=30s tenants=acme,brightpath,delta
+
+Results:
+- iterations: 601 (~19.98/s)
+- checks: 100% (601/601)
+- http_req_failed{endpoint:records}: 0.00%
+- http_req_duration{endpoint:records} p95: 134.7ms (threshold p95<300 PASS)
+- avg: 88.9ms  p90: 126.3ms  max: 370.9ms
+
+Artifacts:
+- docs/evidence/phase5/load-smoke-console.txt
+- docs/evidence/phase5/load-smoke-summary-sanitized.json
+- loadtest/results/smoke-summary.json (local; may contain no secrets)
+
+Note: smoke only — full T5.2 is 200 RPS / 10m (separate approval).

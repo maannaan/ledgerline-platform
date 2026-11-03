@@ -54,6 +54,12 @@ variable "backup_retention_period" {
   default = 7
 }
 
+variable "backup_window" {
+  type        = string
+  description = "UTC daily backup window (RDS automated backups / PITR)."
+  default     = "18:30-19:00" # ~00:00–00:30 IST
+}
+
 variable "deletion_protection" {
   type    = bool
   default = false

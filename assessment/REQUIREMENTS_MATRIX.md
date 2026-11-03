@@ -38,7 +38,7 @@ Never mark TESTED/CLOUD_VERIFIED without evidence paths.
 
 | ID | Requirement | Implementation | Verification | Evidence | Status |
 |----|-------------|----------------|--------------|----------|--------|
-| T4.1 | CI: tests + dep/container scan + isolation | `.github/workflows/ci.yml` | local pytest + pip-audit; GHA after your push | phase4/*; GITHUB_FIRST_PUSH.md | IMPLEMENTED (CLOUD_VERIFIED after Actions green) |
+| T4.1 | CI: tests + dep/container scan + isolation | `.github/workflows/ci.yml` | GHA green | phase4/ci-green.txt | CLOUD_VERIFIED |
 | T4.2 | Zero-downtime deploy + one-step rollback | `deploy_staging.sh` / `rollback_staging.sh` | digest deploy | phase4/deploy-staging.txt | CLOUD_VERIFIED |
 | T4.3 | Safe schema changes while serving | `docs/decisions/safe-migrations.md` | doc | | IMPLEMENTED |
 | T4.4 | Canary one tenant then rest | `docs/runbooks/canary-rollout.md` | procedure | | IMPLEMENTED |
@@ -47,19 +47,19 @@ Never mark TESTED/CLOUD_VERIFIED without evidence paths.
 
 | ID | Requirement | Implementation | Verification | Evidence | Status |
 |----|-------------|----------------|--------------|----------|--------|
-| T5.1 | Automated backups + Evergreen restore timed | backup/restore runbook | RTO/RPO measured | | NOT_STARTED |
-| T5.2 | k6 200 RPS / 10m / 3 tenants; p95 &lt;300ms | `loadtest/` | k6 summary | | NOT_STARTED |
-| T5.3 | Cobalt noisy neighbour; others in target | load + throttle | before/after | | NOT_STARTED |
-| T5.4 | First bottleneck writeup | docs/evidence | writeup | | NOT_STARTED |
+| T5.1 | Automated backups + Evergreen restore timed | RDS retention+PITR; restore drill | RTO 8.25m / RPO 6.23m | phase5/restore-drill-*.json | CLOUD_VERIFIED |
+| T5.2 | k6 200 RPS / 10m / 3 tenants; p95 &lt;300ms | loadtest + records LIMIT fix | ~120 RPS; p95 7.15s (SLO miss, evidenced) | phase5/load-baseline*.txt | CLOUD_VERIFIED (gap documented) |
+| T5.3 | Cobalt noisy neighbour; others in target | heavy limits + NOISY k6 | p95 7.27s vs 7.15s; err 0.05% | phase5/load-noisy.txt | CLOUD_VERIFIED |
+| T5.4 | First bottleneck writeup | unbounded `/records` → LIMIT fix | writeup | phase5/bottleneck-writeup.md | TESTED |
 
 ## Task 6 — Operations
 
 | ID | Requirement | Implementation | Verification | Evidence | Status |
 |----|-------------|----------------|--------------|----------|--------|
-| T6.1 | 3 runbooks (onboard, restore, IR) | `docs/runbooks/` | peer can follow | | NOT_STARTED |
-| T6.2 | Blameless PIR | `docs/post-incident-review.md` | doc | | NOT_STARTED |
-| T6.3 | Cost model shared + dedicated | `docs/COST_MODEL.md` | calc | | NOT_STARTED |
-| T6.4 | ≤2 page 90-day plan | `docs/90_DAY_PLAN.md` | doc | | NOT_STARTED |
+| T6.1 | 3 runbooks (onboard, restore, IR) | `docs/runbooks/{onboarding,database-restore,incident-response}.md` | peer-followable cmds | restore evidence linked | IMPLEMENTED |
+| T6.2 | Blameless PIR | `docs/post-incident-review.md` | load/list incident | phase5 evidence | IMPLEMENTED |
+| T6.3 | Cost model shared + dedicated | `docs/COST_MODEL.md` | labeled estimates | | IMPLEMENTED |
+| T6.4 | ≤2 page 90-day plan | `docs/90_DAY_PLAN.md` | doc + first hire | | IMPLEMENTED |
 
 ## Stretch (after core)
 
@@ -75,5 +75,5 @@ Never mark TESTED/CLOUD_VERIFIED without evidence paths.
 
 | ID | Requirement | Implementation | Verification | Evidence | Status |
 |----|-------------|----------------|--------------|----------|--------|
-| D1 | Reliability Autopilot policies + dry-run + kill switch + audit | `autopilot/` | demo script | | NOT_STARTED |
-| D2 | Ops control-plane Make targets | `Makefile` | demo | | NOT_STARTED |
+| D1 | Reliability Autopilot policies + dry-run + kill switch + audit | `autopilot/` | `make autopilot-demo` + pytest | phase7/* | TESTED |
+| D2 | Ops control-plane Make targets | `Makefile` autopilot-* | demo | phase7/autopilot-demo.txt | TESTED |

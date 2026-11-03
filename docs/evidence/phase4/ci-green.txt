@@ -1,0 +1,8 @@
+Phase 4 CI green evidence
+=========================
+Workflow: ci
+Run URL: https://github.com/maannaan/ledgerline-platform/actions/runs/41613617919
+Conclusion: success
+Commit title: Fix CI: valid Trivy action tag and track secrets Terraform module.
+Jobs: test-and-scan (pytest + pip-audit + Trivy), terraform-validate
+Recorded: 2026-11-03

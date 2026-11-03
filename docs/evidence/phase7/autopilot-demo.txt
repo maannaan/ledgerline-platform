@@ -1,0 +1,155 @@
+== 1) Status (kill switch off) ==
+{
+  "kill_switch": {
+    "killed": false,
+    "flag_file": "/Users/apple/Desktop/Manan/ledgerline-platform/autopilot/KILL_SWITCH",
+    "env_AUTOPILOT_KILL_SWITCH": ""
+  },
+  "actions_note": "allowlisted only"
+}
+
+== 2) Dry-run: deploy health failed → rollback proposal ==
+{
+  "status": "dry_run",
+  "policy_id": "deploy_health_rollback",
+  "action": "rollback_previous_deploy",
+  "reason": "ok",
+  "idempotency_key": "d597f50075ca7b7e",
+  "details": {
+    "verification": "ready_200",
+    "result": {
+      "would_run": "/Users/apple/Desktop/Manan/ledgerline-platform/infra/scripts/rollback_staging.sh",
+      "note": "uses saved prior taskdef digest"
+    },
+    "blast_radius": "platform"
+  }
+}
+
+== 3) Dry-run: CPU high → scale within cap ==
+{
+  "status": "dry_run",
+  "policy_id": "cpu_scale_within_cap",
+  "action": "ecs_scale_within_cap",
+  "reason": "ok",
+  "idempotency_key": "b11a4e077283b896",
+  "details": {
+    "verification": "cpu_below_threshold",
+    "result": {
+      "would_run": [
+        "aws",
+        "ecs",
+        "update-service",
+        "--region",
+        "ap-south-1",
+        "--cluster",
+        "ll-staging-cluster",
+        "--service",
+        "ll-staging-api",
+        "--desired-count",
+        "2"
+      ],
+      "target_desired": 2,
+      "cap": 2
+    },
+    "blast_radius": "platform"
+  }
+}
+
+== 4) Dry-run: data corruption → restore BLOCKED without approval ==
+{
+  "status": "blocked",
+  "policy_id": "data_loss_restore_blocked",
+  "action": "db_restore",
+  "reason": "human_approval_required",
+  "idempotency_key": "f475642e4f087834",
+  "details": {
+    "tenant_blast_radius": "platform"
+  }
+}
+
+== 5) Kill switch blocks everything ==
+{"kill_switch": "on", "reason": "demo"}
+{
+  "status": "blocked",
+  "policy_id": null,
+  "action": null,
+  "reason": "global_kill_switch",
+  "idempotency_key": "kill",
+  "details": {}
+}
+{"kill_switch": "off"}
+
+== 6) Recent audit events ==
+[
+  {
+    "action": "rollback_previous_deploy",
+    "details": {
+      "blast_radius": "platform",
+      "result": {
+        "note": "uses saved prior taskdef digest",
+        "would_run": "/Users/apple/Desktop/Manan/ledgerline-platform/infra/scripts/rollback_staging.sh"
+      },
+      "verification": "ready_200"
+    },
+    "idempotency_key": "d597f50075ca7b7e",
+    "policy_id": "deploy_health_rollback",
+    "reason": "ok",
+    "status": "dry_run",
+    "ts": "2026-11-03T11:34:57.931589+00:00",
+    "type": "decision"
+  },
+  {
+    "action": "ecs_scale_within_cap",
+    "details": {
+      "blast_radius": "platform",
+      "result": {
+        "cap": 2,
+        "target_desired": 2,
+        "would_run": [
+          "aws",
+          "ecs",
+          "update-service",
+          "--region",
+          "ap-south-1",
+          "--cluster",
+          "ll-staging-cluster",
+          "--service",
+          "ll-staging-api",
+          "--desired-count",
+          "2"
+        ]
+      },
+      "verification": "cpu_below_threshold"
+    },
+    "idempotency_key": "b11a4e077283b896",
+    "policy_id": "cpu_scale_within_cap",
+    "reason": "ok",
+    "status": "dry_run",
+    "ts": "2026-11-03T11:34:58.116845+00:00",
+    "type": "decision"
+  },
+  {
+    "action": "db_restore",
+    "details": {
+      "tenant_blast_radius": "platform"
+    },
+    "idempotency_key": "f475642e4f087834",
+    "policy_id": "data_loss_restore_blocked",
+    "reason": "human_approval_required",
+    "status": "blocked",
+    "ts": "2026-11-03T11:34:58.287742+00:00",
+    "type": "decision"
+  },
+  {
+    "action": null,
+    "details": {},
+    "idempotency_key": "kill",
+    "policy_id": null,
+    "reason": "global_kill_switch",
+    "status": "blocked",
+    "ts": "2026-11-03T11:34:58.677975+00:00",
+    "type": "decision"
+  }
+]
+
+Demo complete. Live actions require APPROVE_AUTOPILOT=1 (not used here).

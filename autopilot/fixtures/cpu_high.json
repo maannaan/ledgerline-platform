@@ -1,0 +1,14 @@
+{
+  "name": "cpu_high",
+  "environment": "staging",
+  "service": "api",
+  "severity": "warning",
+  "value": 92,
+  "attributes": {
+    "window": "demo-cpu-1",
+    "desired_count": 2,
+    "cluster": "ll-staging-cluster",
+    "ecs_service": "ll-staging-api",
+    "aws_region": "ap-south-1"
+  }
+}

@@ -74,9 +74,29 @@ make rollback-staging    # one step
 # Alarms: ledgerline-staging-5xx / latency / unhealthy-hosts
 ```
 
-## Later demos
+## Phase 5–6 demo (recovery + ops)
 
-1. Evergreen restore timing  
-2. k6 200 RPS + Cobalt noisy neighbour  
-3. Autopilot dry-run + kill switch  
+```bash
+# Restore evidence (do not re-create RDS unless APPROVE_RESTORE=1):
+cat docs/evidence/phase5/restore-drill-20261103T100335Z.json
+# Load / noisy / bottleneck honesty:
+head -40 docs/evidence/phase5/load-baseline-tuned.txt
+head -30 docs/evidence/phase5/load-noisy.txt
+# Ops pack:
+ls docs/runbooks/onboarding.md docs/runbooks/database-restore.md \
+   docs/runbooks/incident-response.md docs/post-incident-review.md \
+   docs/COST_MODEL.md docs/90_DAY_PLAN.md
+```
+
+## Phase 7 demo (Reliability Autopilot)
+
+```bash
+make autopilot-demo
+# Shows: rollback dry-run, scale-within-cap dry-run, restore BLOCKED, kill switch
+make autopilot-test   # 4 unit tests
+```
+
+## Optional later
+
+1. Capacity re-test after vertical scale  
 

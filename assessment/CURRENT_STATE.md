@@ -1,28 +1,29 @@
 # CURRENT_STATE (handoff)
 
 **Updated:** 2026-11-03  
-**Phase:** 4 — CI fix ready (Trivy tag + secrets module gitignore); **you** push  
+**Phase:** 7 complete — Reliability Autopilot (differentiator)  
 **Git root:** `/Users/apple/Desktop/Manan/ledgerline-platform`  
-**Remote:** `origin` → `https://github.com/maannaan/ledgerline-platform.git` (agent does **not** commit/push)  
-**Failed run:** https://github.com/maannaan/ledgerline-platform/actions/runs/41612869529
+**CI green:** https://github.com/maannaan/ledgerline-platform/actions/runs/41613617919
 
 ## Live staging
 
-- ALB (HTTP): `http://ll-staging-alb-1605781679.ap-south-1.elb.amazonaws.com`
-- `/health`, `/ready`, `/metrics` live
-- CloudWatch dashboard **Ledgerline-Staging**; alarms → SNS `mananpaliwal30@gmail.com`
-- Deploy: `make deploy-staging`; rollback: `make rollback-staging`
-- CI: `.github/workflows/ci.yml` — first green run needs your push (`docs/GITHUB_FIRST_PUSH.md`)
+- ALB: `http://ll-staging-alb-1605781679.ap-south-1.elb.amazonaws.com`
+- Desired count: 1
 
-## Phase 4 blocker status
+## Phase 7 — Autopilot
 
-| Blocker | Status |
-|---------|--------|
-| GitHub Actions green | First run failed (bad Trivy tag + `secrets/` gitignored). Fix ready — **you** push |
-| TLS on ALB | Code ready (`acm_certificate_arn`); needs your domain — `docs/runbooks/enable-tls.md` |
+| Item | Path |
+|------|------|
+| Policies | `autopilot/policies/staging.json` |
+| Engine + CLI | `autopilot/engine.py`, `autopilot/cli.py` |
+| Demo | `make autopilot-demo` |
+| Tests | 4 passed — `docs/evidence/phase7/autopilot-pytest.txt` |
+| Evidence | `docs/evidence/phase7/autopilot-demo.txt` |
+
+Safety: dry-run default, kill switch, allowlisted actions, approval for restore, audit JSONL.
 
 ## Next
 
-1. You: first commit + push → confirm Actions green → save evidence URL  
-2. Phase 5 — backup/restore + load/noisy-neighbour  
-3. Optional Autopilot after Phase 5 evidence  
+1. You push Phases 5–7 when ready  
+2. Founder demo dry-run (`docs/DEMO_RUNBOOK.md` + `make autopilot-demo`)  
+3. Optional capacity work for p95&lt;300ms @ 200 RPS  

@@ -1,0 +1,10 @@
+{
+  "name": "deploy_health_failed",
+  "environment": "staging",
+  "service": "api",
+  "severity": "critical",
+  "attributes": {
+    "window": "demo-deploy-1",
+    "failed_taskdef": "ll-staging-api:999"
+  }
+}

@@ -44,10 +44,14 @@ resource "aws_db_instance" "this" {
   publicly_accessible    = false
   multi_az               = var.multi_az
 
-  backup_retention_period = var.backup_retention_period
-  deletion_protection     = var.deletion_protection
-  skip_final_snapshot     = var.skip_final_snapshot
-  apply_immediately       = true
+  backup_retention_period  = var.backup_retention_period
+  backup_window            = var.backup_window
+  copy_tags_to_snapshot    = true
+  deletion_protection      = var.deletion_protection
+  skip_final_snapshot      = var.skip_final_snapshot
+  apply_immediately        = true
+  # Automated backups with retention > 0 enable PITR (LatestRestorableTime).
+  # Evergreen target: RPO ≤ 15m (continuous WAL) / RTO ≤ 1h (fresh-instance restore).
 
   tags = merge(var.tags, {
     Name       = "${var.name_prefix}-pg"

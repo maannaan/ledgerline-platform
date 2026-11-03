@@ -1,0 +1,43 @@
+{
+  "http_req_duration": {
+    "avg": 88.8927936772047,
+    "min": 26.25,
+    "med": 75.809,
+    "max": 370.885,
+    "p(90)": 126.337,
+    "p(95)": 134.707
+  },
+  "http_reqs": {
+    "count": 601,
+    "rate": 19.9821603528138
+  },
+  "http_req_failed": {
+    "passes": 0,
+    "fails": 601,
+    "value": 0
+  },
+  "checks": {
+    "passes": 601,
+    "fails": 0,
+    "value": 1
+  },
+  "http_req_duration{endpoint:records}": {
+    "avg": 88.8927936772047,
+    "min": 26.25,
+    "med": 75.809,
+    "max": 370.885,
+    "p(90)": 126.337,
+    "p(95)": 134.707,
+    "thresholds": {
+      "p(95)<300": false
+    }
+  },
+  "http_req_failed{endpoint:records}": {
+    "passes": 0,
+    "fails": 601,
+    "thresholds": {
+      "rate<0.01": false
+    },
+    "value": 0
+  }
+}

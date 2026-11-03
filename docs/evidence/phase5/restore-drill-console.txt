@@ -1,0 +1,42 @@
+== Source instance ==
+{
+    "Id": "ll-staging-delta-pg",
+    "Status": "available",
+    "Engine": "postgres",
+    "Class": "db.t4g.micro",
+    "LatestRestorable": "2026-11-03T09:57:41+00:00",
+    "BackupRetention": 7,
+    "Encrypted": true
+}
+== Latest automated snapshot ==
+Using snapshot: rds:ll-staging-delta-pg-2026-11-03-08-22
+== Restore to fresh instance ll-staging-evergreen-restore-202611031003 ==
+Waiting until available (this is the RTO clock)...
+{
+  "drill": "evergreen_class_restore",
+  "source_db": "ll-staging-delta-pg",
+  "target_db": "ll-staging-evergreen-restore-202611031003",
+  "snapshot_id": "rds:ll-staging-delta-pg-2026-11-03-08-22",
+  "incident_time_utc": "2026-11-03T10:03:55Z",
+  "latest_restorable_time_utc": "2026-11-03T09:57:41+00:00",
+  "restore_start_utc": "2026-11-03T10:03:55Z",
+  "restore_available_utc": "2026-11-03T10:12:10Z",
+  "rto_seconds": 495,
+  "rto_minutes": 8.25,
+  "rpo_seconds": 374,
+  "rpo_minutes": 6.23,
+  "targets": {
+    "rto_max_seconds": 3600,
+    "rpo_max_seconds": 900
+  },
+  "rto_met": true,
+  "rpo_met": true,
+  "notes": [
+    "Restore into NEW instance (source not overwritten).",
+    "Connectivity validation: private RDS \u2014 use ECS one-off or temporary jump after SG allow.",
+    "Delta dedicated stands in for Evergreen Health on staging."
+  ]
+}
+== DESTROY_AFTER=1: deleting restored instance ==
+Delete initiated for ll-staging-evergreen-restore-202611031003
+Evidence: docs/evidence/phase5/restore-drill-20261103T100335Z.json

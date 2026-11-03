@@ -1,0 +1,10 @@
+{
+  "name": "data_corruption",
+  "environment": "staging",
+  "service": "api",
+  "severity": "critical",
+  "attributes": {
+    "window": "demo-corrupt-1",
+    "tenant": "delta"
+  }
+}

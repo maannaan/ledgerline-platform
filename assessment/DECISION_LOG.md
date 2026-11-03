@@ -22,3 +22,10 @@
 | 2026-11-03 | Primary region `ap-south-1` (Mumbai) | User request; AWS CLI already on Mumbai | us-east-1 | ACCEPTED |
 | 2026-11-03 | Apply staging only first (not prod) | Stay near $25–40 burn; prod code ready | Dual-env apply | ACCEPTED |
 | 2026-11-03 | Local Acme COPY rehearsal + written CDC cutover | Prove seed move; honest about prod replication | Claim zero-downtime CDC implemented | ACCEPTED |
+| 2026-11-03 | Staging restore drill uses Delta dedicated as Evergreen stand-in | Evergreen not provisioned (cost); same dedicated+KMS class | Provision third dedicated RDS | ACCEPTED |
+| 2026-11-03 | Bound `/reports/heavy` concurrency + short statement_timeout | Noisy-neighbour isolation without killing OLTP | Mock report endpoint; unlimited concurrency | ACCEPTED |
+| 2026-11-03 | Load tests on staging, labeled honestly | Brief says production; unsafe/costly for lab | Blind prod load | ACCEPTED |
+| 2026-11-03 | Add `/records` LIMIT + skip empty ILIKE | Unbounded list was first load bottleneck (~300KB/req) | Vertical-scale only; leave bug | ACCEPTED |
+| 2026-11-03 | Document p95 SLO miss @ 200 RPS after fix | Honesty > fake green; ~120 RPS / p95~7s evidenced | Claim pass without capacity | ACCEPTED |
+| 2026-11-03 | Autopilot as local deterministic CLI (not Lambda) | Demoable, auditable, zero extra AWS spend | Always-on Lambda remediator | ACCEPTED |
+| 2026-11-03 | DB restore never auto-executed by Autopilot | Data integrity / Evergreen process | Semi-auto restore | ACCEPTED |

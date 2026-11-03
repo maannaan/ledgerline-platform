@@ -1,0 +1,86 @@
+{
+  "policies": [
+    {
+      "id": "unhealthy_task_observe",
+      "description": "Prefer native ECS replacement; Autopilot only notifies.",
+      "signal": "ecs_task_unhealthy",
+      "environments": ["staging"],
+      "services": ["api"],
+      "action": "notify_only",
+      "max_attempts": 3,
+      "cooldown_seconds": 120,
+      "requires_approval": false,
+      "tenant_blast_radius": "platform",
+      "verification": "target_group_healthy"
+    },
+    {
+      "id": "deploy_health_rollback",
+      "description": "Rollback to previous task definition when new deploy fails health.",
+      "signal": "deploy_health_failed",
+      "environments": ["staging"],
+      "services": ["api"],
+      "action": "rollback_previous_deploy",
+      "max_attempts": 1,
+      "cooldown_seconds": 600,
+      "requires_approval": false,
+      "tenant_blast_radius": "platform",
+      "verification": "ready_200"
+    },
+    {
+      "id": "cpu_scale_within_cap",
+      "description": "Scale ECS desired count up to hard cap (default 2).",
+      "signal": "cpu_high",
+      "environments": ["staging"],
+      "services": ["api"],
+      "action": "ecs_scale_within_cap",
+      "threshold": 80,
+      "duration_seconds": 300,
+      "max_attempts": 2,
+      "cooldown_seconds": 600,
+      "max_capacity": 2,
+      "requires_approval": false,
+      "tenant_blast_radius": "platform",
+      "verification": "cpu_below_threshold"
+    },
+    {
+      "id": "db_saturation_shed_reports",
+      "description": "Shed heavy-report load via existing concurrency controls.",
+      "signal": "db_saturation",
+      "environments": ["staging"],
+      "services": ["api"],
+      "action": "shed_heavy_reports",
+      "threshold": 90,
+      "max_attempts": 2,
+      "cooldown_seconds": 300,
+      "requires_approval": false,
+      "tenant_blast_radius": "single_tenant",
+      "verification": "latency_recovering"
+    },
+    {
+      "id": "backup_fail_notify",
+      "description": "One notify on backup failure; no destructive retries.",
+      "signal": "backup_failed",
+      "environments": ["staging"],
+      "services": ["api"],
+      "action": "notify_only",
+      "max_attempts": 1,
+      "cooldown_seconds": 3600,
+      "requires_approval": false,
+      "tenant_blast_radius": "none",
+      "verification": "none"
+    },
+    {
+      "id": "data_loss_restore_blocked",
+      "description": "DB restore is never autonomous — human + APPROVE_RESTORE only.",
+      "signal": "data_corruption",
+      "environments": ["staging", "production"],
+      "services": ["api"],
+      "action": "db_restore",
+      "max_attempts": 1,
+      "cooldown_seconds": 0,
+      "requires_approval": true,
+      "tenant_blast_radius": "platform",
+      "verification": "restore_runbook"
+    }
+  ]
+}

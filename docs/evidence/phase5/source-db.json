@@ -1,0 +1,9 @@
+{
+    "Id": "ll-staging-delta-pg",
+    "Status": "available",
+    "Engine": "postgres",
+    "Class": "db.t4g.micro",
+    "LatestRestorable": "2026-11-03T09:57:41+00:00",
+    "BackupRetention": 7,
+    "Encrypted": true
+}

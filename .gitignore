@@ -53,6 +53,11 @@ override.tf.json
 !.cursor/rules/
 !.cursor/rules/**
 
+# Autopilot runtime state (keep fixtures/policies)
+autopilot/KILL_SWITCH
+autopilot/audit/events.jsonl
+autopilot/audit/state.json
+
 # Local evidence that may contain endpoints/keys (keep sanitized copies only)
 docs/evidence/**/*.env
 docs/evidence/**/*secret*
@@ -61,3 +66,4 @@ loadtest/results/**/*.keys
 # Docker
 pgdata/
 .pdf-extract.txt
+.loadtest-tenants.env

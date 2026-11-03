@@ -125,6 +125,21 @@ def test_report_scoped(client, tenants):
     assert resp.json()["tenant"] == a["id"]
 
 
+def test_heavy_report_concurrency_limit(client, tenants, monkeypatch):
+    """With max concurrent=1, a held slot forces the next caller to 429."""
+    import main as main_mod
+    import threading
+
+    monkeypatch.setattr(main_mod, "_heavy_report_sem", threading.BoundedSemaphore(1))
+    assert main_mod._heavy_report_sem.acquire(blocking=False)
+    try:
+        resp = client.get("/reports/heavy", headers=_auth(tenants["a"]["key"]))
+        assert resp.status_code == 429
+        assert resp.json()["error"] == "heavy_report_concurrency_limit"
+    finally:
+        main_mod._heavy_report_sem.release()
+
+
 def test_tenant_cannot_use_admin(client, tenants):
     resp = client.delete(
         f"/admin/tenants/{tenants['b']['id']}",

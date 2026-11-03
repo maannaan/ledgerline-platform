@@ -1,0 +1,17 @@
+Phase 5 — load baseline T5.2 (first run, pre-tune)
+====================================================
+Date: 2026-11-03
+Env: staging ALB, 1× Fargate task (256 CPU / 512 MB), shared+dedicated RDS t4g.micro
+Config: RATE=200 DURATION=10m tenants=acme,brightpath,delta
+
+Results:
+- completed iterations: 14289 (~22.7/s) — could NOT sustain 200 RPS
+- dropped_iterations: 105614 (arrival-rate backlog)
+- checks: 100% success on completed reqs
+- http_req_failed: 0.00%
+- http_req_duration{endpoint:records} p95: **24.74s** (threshold p95<300ms FAIL)
+- avg 16.63s / p90 23.87s / max 46.99s
+
+Conclusion (first bottleneck):
+Single API task + small DB pool / micro RDS saturates well before 200 RPS.
+Next: scale ECS desired count 2+ and re-measure (after-tuning run).

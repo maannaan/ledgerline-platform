@@ -1,0 +1,16 @@
+Phase 5 — Cobalt noisy neighbour (T5.3)
+=======================================
+Date: 2026-11-03
+Config: steady RATE=200 / 10m (acme,brightpath,delta) + NOISY 10 VUs → Cobalt `/reports/heavy`
+Mitigations live: HEAVY_REPORT_MAX_CONCURRENT=2 + short statement_timeout; records LIMIT fix
+
+Results:
+- completed: 69897 (~115.6/s)
+- checks: 99.94% (heavy_ok_or_limited included)
+- http_req_failed{endpoint:records}: **0.05%** (threshold <1% PASS)
+- p95 `/records`: **7.27s** (vs tuned baseline 7.15s)
+- heavy scenario exercised (not mocked)
+
+Isolation conclusion:
+Cobalt heavy traffic did **not** materially worsen other tenants' p95 (7.15s → 7.27s)
+or error rate (0% → 0.05%). Remaining gap to 300ms SLO is capacity, not noisy-neighbour leakage.

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import threading
 import time
 import uuid
 from typing import Any
@@ -15,7 +16,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from audit import write_admin_audit
 from auth import AdminPrincipal, Principal, require_admin, require_tenant
-from config import ConfigError, load_settings
+from config import ConfigError, Settings, load_settings
 from db import close_pool, connection, init_pool, ping
 from logging_setup import configure_logging
 from schema import apply_schema
@@ -23,8 +24,10 @@ from telemetry import metrics_payload, observe_request
 
 logger = configure_logging()
 ENV = os.getenv("ENVIRONMENT", "local")
+_settings: Settings | None = None
+_heavy_report_sem: threading.BoundedSemaphore | None = None
 
-app = FastAPI(title="Ledgerline API", version="0.4.0")
+app = FastAPI(title="Ledgerline API", version="0.5.0")
 
 
 @app.middleware("http")
@@ -92,13 +95,20 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 @app.on_event("startup")
 def on_startup() -> None:
+    global _settings, _heavy_report_sem
     try:
         settings = load_settings()
     except ConfigError as exc:
         raise RuntimeError(str(exc)) from exc
+    _settings = settings
+    _heavy_report_sem = threading.BoundedSemaphore(settings.heavy_report_max_concurrent)
     init_pool(settings)
     apply_schema()
-    logger.info("ledgerline_startup schema_ready=true", extra={"env": ENV})
+    logger.info(
+        "ledgerline_startup schema_ready=true heavy_report_max_concurrent=%s",
+        settings.heavy_report_max_concurrent,
+        extra={"env": ENV},
+    )
 
 
 @app.on_event("shutdown")
@@ -151,20 +161,34 @@ def create_record(
 @app.get("/records")
 def list_records(
     search: str = Query(default=""),
+    limit: int = Query(default=50, ge=1, le=200),
     principal: Principal = Depends(require_tenant),
 ):
-    pattern = f"%{search}%"
+    # Empty search → indexed tenant list with LIMIT (load-path). ILIKE only when asked.
     with connection(autocommit=True) as conn:
-        rows = conn.execute(
-            """
-            SELECT id, payload, created_at
-            FROM records
-            WHERE tenant_id = %s
-              AND payload::text ILIKE %s
-            ORDER BY id DESC
-            """,
-            (principal.tenant_id, pattern),
-        ).fetchall()
+        if search:
+            rows = conn.execute(
+                """
+                SELECT id, payload, created_at
+                FROM records
+                WHERE tenant_id = %s
+                  AND payload::text ILIKE %s
+                ORDER BY id DESC
+                LIMIT %s
+                """,
+                (principal.tenant_id, f"%{search}%", limit),
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                """
+                SELECT id, payload, created_at
+                FROM records
+                WHERE tenant_id = %s
+                ORDER BY id DESC
+                LIMIT %s
+                """,
+                (principal.tenant_id, limit),
+            ).fetchall()
     return [
         {"id": r[0], "payload": r[1], "created_at": r[2]}
         for r in rows
@@ -192,17 +216,47 @@ def get_record(
 
 @app.get("/reports/heavy")
 def heavy_report(principal: Principal = Depends(require_tenant)):
-    with connection(autocommit=True) as conn:
-        count = conn.execute(
-            """
-            SELECT count(*)
-            FROM records r1
-            JOIN records r2 ON r1.tenant_id = r2.tenant_id
-            WHERE r1.tenant_id = %s
-            """,
-            (principal.tenant_id,),
-        ).fetchone()[0]
-    return {"tenant": principal.tenant_id, "pairs": count}
+    """
+    Expensive self-join kept for Cobalt noisy-neighbour drills.
+    Bounded concurrency + shorter statement_timeout so other tenants keep headroom.
+    """
+    if _heavy_report_sem is None or _settings is None:
+        raise HTTPException(status_code=503, detail="not_ready")
+    acquired = _heavy_report_sem.acquire(blocking=False)
+    if not acquired:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="heavy_report_concurrency_limit",
+        )
+    try:
+        timeout_ms = _settings.heavy_report_statement_timeout_ms
+        # Non-autocommit so SET LOCAL applies to the heavy query transaction.
+        with connection(autocommit=False) as conn:
+            conn.execute(f"SET LOCAL statement_timeout = {int(timeout_ms)}")
+            try:
+                count = conn.execute(
+                    """
+                    SELECT count(*)
+                    FROM records r1
+                    JOIN records r2 ON r1.tenant_id = r2.tenant_id
+                    WHERE r1.tenant_id = %s
+                    """,
+                    (principal.tenant_id,),
+                ).fetchone()[0]
+            except Exception as exc:
+                # Statement timeout / cancel → 504 so clients back off without 500 storms.
+                logger.warning(
+                    "heavy_report_failed tenant=%s err=%s",
+                    principal.tenant_id,
+                    type(exc).__name__,
+                )
+                raise HTTPException(
+                    status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+                    detail="heavy_report_timeout",
+                ) from exc
+        return {"tenant": principal.tenant_id, "pairs": count}
+    finally:
+        _heavy_report_sem.release()
 
 
 @app.delete("/admin/tenants/{tenant_id}")
