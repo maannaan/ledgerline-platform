@@ -1,0 +1,16 @@
+Smoke validate — 2026-11-05T06:21:02Z
+ALB=http://ll-staging-alb-1605781679.ap-south-1.elb.amazonaws.com
+ECS desired/running=1/1 taskdef=:8
+
+== /health ==
+http=200 time_ms=0.270279
+{"status":"ok"}
+== /ready ==
+http=200 time_ms=0.174237
+{"status":"ready"}
+== auth /records?limit=5 ==
+tenant=acme http=200 bytes=589
+
+== autopilot unit tests ==
+....                                                                     [100%]
+4 passed in 0.13s

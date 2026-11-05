@@ -1,0 +1,148 @@
+Ledgerline AWS inventory — 2026-11-05T06:20:16Z
+Region: ap-south-1
+========================================
+
+== STS ==
+{
+    "UserId": "660442155240",
+    "Account": "660442155240",
+    "Arn": "arn:aws:iam::660442155240:root"
+}
+
+== ECS clusters (ll-) ==
+{
+    "clusterArns": [
+        "arn:aws:ecs:ap-south-1:660442155240:cluster/ll-staging-cluster"
+    ]
+}
+
+== ECS service ll-staging-api ==
+{
+    "status": "ACTIVE",
+    "desired": 1,
+    "running": 1,
+    "pending": 0,
+    "taskDef": "arn:aws:ecs:ap-south-1:660442155240:task-definition/ll-staging-api:8",
+    "deployments": [
+        {
+            "status": "PRIMARY",
+            "desired": 1,
+            "running": 1
+        }
+    ]
+}
+
+== RDS instances (ll-staging) ==
+[
+    {
+        "Id": "ll-staging-delta-pg",
+        "Status": "available",
+        "Class": "db.t4g.micro",
+        "Engine": "postgres",
+        "MultiAZ": false
+    },
+    {
+        "Id": "ll-staging-shared-pg",
+        "Status": "available",
+        "Class": "db.t4g.micro",
+        "Engine": "postgres",
+        "MultiAZ": false
+    }
+]
+
+== ALBs (ll-staging) ==
+[
+    {
+        "Name": "ll-staging-alb",
+        "DNS": "ll-staging-alb-1605781679.ap-south-1.elb.amazonaws.com",
+        "State": "active",
+        "Scheme": "internet-facing"
+    }
+]
+
+== Target groups health (ll-staging) ==
+TG=arn:aws:elasticloadbalancing:ap-south-1:660442155240:targetgroup/ll-staging-tg/4514e08d75d8d107
+{
+    "TargetHealthDescriptions": [
+        {
+            "Target": {
+                "Id": "10.30.0.163",
+                "Port": 8000,
+                "AvailabilityZone": "ap-south-1a"
+            },
+            "HealthCheckPort": "8000",
+            "TargetHealth": {
+                "State": "healthy"
+            },
+            "AdministrativeOverride": {
+                "State": "no_override",
+                "Reason": "AdministrativeOverride.NoOverride",
+                "Description": "No override is currently active on target"
+            }
+        }
+    ]
+}
+
+== ECR repos ==
+[
+    "ll-staging-api"
+]
+
+== Secrets ==
+[
+    {
+        "Name": "ll-staging/app",
+        "LastChanged": "2026-11-03T14:05:17.180000+05:30"
+    }
+]
+
+== KMS aliases ll-staging ==
+[
+    "alias/ll-staging-delta",
+    "alias/ll-staging-shared"
+]
+
+== CloudWatch alarms ll / ledgerline ==
+[
+    {
+        "Name": "ledgerline-staging-5xx",
+        "State": "OK"
+    },
+    {
+        "Name": "ledgerline-staging-latency",
+        "State": "OK"
+    },
+    {
+        "Name": "ledgerline-staging-unhealthy-hosts",
+        "State": "OK"
+    }
+]
+
+== Log groups ll-staging ==
+[]
+
+== Budgets (account) ==
+[
+    {
+        "Name": "ll-staging-monthly",
+        "Limit": {
+            "Amount": "75.0",
+            "Unit": "USD"
+        }
+    }
+]
+
+== Leftover restore RDS ==
+[]
+
+== Log groups containing ll-staging ==
+[
+    "/ledgerline/ll-staging/api"
+]
+
+== CW dashboards ==
+[
+    "Ledgerline-Staging"
+]
+
+OUTCOME: all_present (ECS 1/1 healthy, 2 RDS available, ALB active, secrets+KMS+ECR+alarms+budget; no restore leftovers)

@@ -62,6 +62,8 @@ autopilot/audit/state.json
 docs/evidence/**/*.env
 docs/evidence/**/*secret*
 loadtest/results/**/*.keys
+loadtest/results/**/*.json
+!loadtest/results/.gitkeep
 
 # Docker
 pgdata/

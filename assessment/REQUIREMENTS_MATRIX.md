@@ -22,7 +22,7 @@ Never mark TESTED/CLOUD_VERIFIED without evidence paths.
 | T2.3 | Automated tenant isolation tests in CI | `app/tests/test_tenant_isolation.py` | pytest (CI wire Phase 4) | `docs/evidence/phase2/pytest-isolation.txt` | TESTED |
 | T2.4 | Secrets manager + least privilege | Secrets Manager + ECS task roles | staging live | phase3 evidence | CLOUD_VERIFIED |
 | T2.5 | Encrypt transit/rest; admin audit immutable | RDS+KMS at rest; audit table; TLS optional ACM | audit pytest; TLS needs domain | enable-tls.md | IMPLEMENTED (TLS DEFERRED without domain) |
-| T2.6 | Delta questionnaire honest | `docs/security-questionnaire.md` | review | partial answers | IN_PROGRESS |
+| T2.6 | Delta questionnaire honest | `docs/security-questionnaire.md` | review vs staging evidence | questionnaire + phase5/8 evidence | IMPLEMENTED |
 
 ## Task 3 — Observability
 
@@ -48,7 +48,7 @@ Never mark TESTED/CLOUD_VERIFIED without evidence paths.
 | ID | Requirement | Implementation | Verification | Evidence | Status |
 |----|-------------|----------------|--------------|----------|--------|
 | T5.1 | Automated backups + Evergreen restore timed | RDS retention+PITR; restore drill | RTO 8.25m / RPO 6.23m | phase5/restore-drill-*.json | CLOUD_VERIFIED |
-| T5.2 | k6 200 RPS / 10m / 3 tenants; p95 &lt;300ms | loadtest + records LIMIT fix | ~120 RPS; p95 7.15s (SLO miss, evidenced) | phase5/load-baseline*.txt | CLOUD_VERIFIED (gap documented) |
+| T5.2 | k6 200 RPS / 10m / 3 tenants; p95 &lt;300ms | LIMIT fix + ECS 512/1024×2 capacity profile | ~200 RPS; p95 131.6ms PASS | phase8/load-capacity.txt | CLOUD_VERIFIED |
 | T5.3 | Cobalt noisy neighbour; others in target | heavy limits + NOISY k6 | p95 7.27s vs 7.15s; err 0.05% | phase5/load-noisy.txt | CLOUD_VERIFIED |
 | T5.4 | First bottleneck writeup | unbounded `/records` → LIMIT fix | writeup | phase5/bottleneck-writeup.md | TESTED |
 

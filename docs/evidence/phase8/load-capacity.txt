@@ -1,0 +1,17 @@
+Phase 8 — capacity retest (T5.2 gap close)
+==========================================
+Date: 2026-11-05
+Config: ECS cpu=512 memory=1024 desired=2 · RDS still t4g.micro · LIMIT fix in place
+k6: RATE=200 DURATION=10m tenants=acme,brightpath,delta
+
+Results:
+- http_reqs: 119949 (~199.9/s) — sustained target arrival
+- dropped_iterations: 52 (negligible)
+- checks: 100%
+- http_req_failed: 0.00%
+- p95 `/records`: **131.56 ms** (threshold p95<300 PASS)
+- avg 47.25 ms · p90 100 ms · max 652 ms
+
+Post-run: scaled back to cpu=256/memory=512 desired=1 (taskdef :10) for cost.
+
+Compare prior tuned baseline (256CPU lean): ~120 RPS, p95 ~7.15s FAIL.
