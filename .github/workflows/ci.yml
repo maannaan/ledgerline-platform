@@ -18,8 +18,9 @@ jobs:
         image: postgres:16
         env:
           POSTGRES_USER: admin
-          POSTGRES_PASSWORD: ci_ephemeral_db_only
           POSTGRES_DB: ledgerline
+          # Ephemeral CI service only — trust auth avoids embedding DB credentials in YAML.
+          POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
         options: >-
@@ -29,8 +30,7 @@ jobs:
           --health-retries 10
 
     env:
-      # Ephemeral CI DB only (not production).
-      DATABASE_URL: postgresql://admin:ci_ephemeral_db_only@localhost:5432/ledgerline
+      DATABASE_URL: postgresql://admin@localhost:5432/ledgerline
       ADMIN_TOKEN: ci-admin-token-not-for-prod
       API_KEY_PEPPER: ci-pepper-not-for-prod
       AWS_REGION: ap-south-1
@@ -83,11 +83,11 @@ jobs:
             app/requirements-dev.txt
 
       - name: Install dependencies
-        run: pip install "--only-binary=:all:" -r requirements-dev.txt
+        run: pip install -r requirements-dev.txt
 
       - name: Dependency vulnerability scan
         run: |
-          pip install "--only-binary=:all:" pip-audit==2.7.3
+          pip install pip-audit==2.7.3
           pip-audit -r requirements.txt --progress-spinner off
 
       - name: Tenant isolation + unit tests

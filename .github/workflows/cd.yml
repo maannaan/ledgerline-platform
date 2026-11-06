@@ -126,8 +126,8 @@ jobs:
         image: postgres:16
         env:
           POSTGRES_USER: admin
-          POSTGRES_PASSWORD: ci_ephemeral_db_only
           POSTGRES_DB: ledgerline
+          POSTGRES_HOST_AUTH_METHOD: trust
         ports:
           - 5432:5432
         options: >-
@@ -136,7 +136,7 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     env:
-      DATABASE_URL: postgresql://admin:ci_ephemeral_db_only@localhost:5432/ledgerline
+      DATABASE_URL: postgresql://admin@localhost:5432/ledgerline
       ADMIN_TOKEN: ci-admin-token-not-for-prod
       API_KEY_PEPPER: ci-pepper-not-for-prod
     defaults:
@@ -151,7 +151,7 @@ jobs:
           cache-dependency-path: |
             app/requirements.txt
             app/requirements-dev.txt
-      - run: pip install "--only-binary=:all:" -r requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
       - run: python -m pytest
 
   sonar:
@@ -208,7 +208,7 @@ jobs:
           python-version: "3.12"
       - name: pip-audit
         run: |
-          pip install "--only-binary=:all:" pip-audit==2.7.3
+          pip install pip-audit==2.7.3
           pip-audit -r requirements.txt --progress-spinner off
       - name: Build image for Trivy
         working-directory: .
