@@ -157,7 +157,8 @@ module "github_oidc" {
   name_prefix            = local.name_prefix
   aws_region             = var.aws_region
   github_org_repo        = var.github_org_repo
-  manage_oidc_provider   = true
+  # Account already has token.actions.githubusercontent.com (409 if re-created).
+  manage_oidc_provider   = false
   ecr_repository_arn     = module.ecs_api.ecr_repository_arn
   ecs_execution_role_arn = module.ecs_api.ecs_execution_role_arn
   ecs_task_role_arn      = module.ecs_api.ecs_task_role_arn
