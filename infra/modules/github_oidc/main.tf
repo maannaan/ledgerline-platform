@@ -13,6 +13,14 @@ locals {
   oidc_thumbprints = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
   ci_secret_name   = "${var.name_prefix}/ci"
   role_name        = "${var.name_prefix}-gha"
+  github_owner     = split("/", var.github_org_repo)[0]
+  github_repo      = split("/", var.github_org_repo)[1]
+  # Classic sub: repo:owner/repo:ref:refs/heads/main
+  # GitHub nBF / custom claims: repo:owner@ORG_ID/repo@REPO_ID:ref:...
+  oidc_sub_patterns = [
+    "repo:${var.github_org_repo}:*",
+    "repo:${local.github_owner}@*/${local.github_repo}@*:*",
+  ]
 }
 
 resource "aws_iam_openid_connect_provider" "github" {
@@ -52,7 +60,7 @@ data "aws_iam_policy_document" "gha_assume" {
     condition {
       test     = "StringLike"
       variable = "${local.oidc_url}:sub"
-      values   = ["repo:${var.github_org_repo}:*"]
+      values   = local.oidc_sub_patterns
     }
   }
 }

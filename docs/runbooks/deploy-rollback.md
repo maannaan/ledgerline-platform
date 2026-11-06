@@ -70,7 +70,9 @@ Examples:
 2. **Rollback staging:** `run_rollback=true`, `image_tag=<previous-sha>`, all other run_* false.
 3. **Production:** same as promote but `environment=production` and `confirm_production=DEPLOY` (fails until prod stack is applied).
 
-OIDC roles are created by Terraform module `github_oidc` (staging manages the account OIDC provider). **Ask before** `APPROVE_APPLY=1 make platform-apply ENV=staging` to create roles/secret.
+OIDC roles are created by Terraform module `github_oidc`. Trust allows both classic `repo:owner/repo:*` and GitHub nBF subjects `repo:owner@ID/repo@ID:*`.
+
+**Ask before** `APPROVE_APPLY=1 make platform-apply ENV=staging` to create/update roles/secret.
 
 ## Safe DB migrations
 
