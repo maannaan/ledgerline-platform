@@ -23,7 +23,7 @@ TASK_FAMILY="${PREFIX}-api"
 DIGEST=$(aws ecr describe-images --region "$REGION" --repository-name "$ECR_REPO" \
   --image-ids imageTag="${IMAGE_TAG}" --query 'imageDetails[0].imageDigest' --output text)
 if [[ -z "$DIGEST" || "$DIGEST" == "None" ]]; then
-  echo "ERROR: rollback tag ${IMAGE_TAG} not found in ${ECR_REPO}"
+  echo "ERROR: rollback tag ${IMAGE_TAG} not found in ${ECR_REPO}" >&2
   exit 1
 fi
 echo "Rolling back ${ENV_NAME} to tag=${IMAGE_TAG} digest=${DIGEST}"

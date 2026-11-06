@@ -86,7 +86,8 @@ resource "aws_lb" "this" {
   load_balancer_type = "application"
   security_groups    = [var.alb_security_group_id]
   subnets            = var.subnet_ids
-  tags               = merge(var.tags, { Name = "${var.name_prefix}-alb" })
+  tags = merge(var.tags, { Name = "${var.name_prefix}-alb" })
+  # access_logs omitted for lean staging (no log bucket / cost). Enable with S3 when needed.
 }
 
 resource "aws_lb_target_group" "api" {

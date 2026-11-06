@@ -1,13 +1,13 @@
 import os
-import random
+import secrets
 import sys
 
 import psycopg
 from psycopg.types.json import Jsonb
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL", "postgresql://admin:admin123@localhost:5432/ledgerline"
-)
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if not DATABASE_URL:
+    raise SystemExit("DATABASE_URL is required (no hardcoded lab password in seed.py)")
 
 tenant, count = sys.argv[1], int(sys.argv[2])
 rows = [
@@ -16,8 +16,8 @@ rows = [
         Jsonb(
             {
                 "order": i,
-                "amount": round(random.uniform(5, 500), 2),
-                "sku": f"SKU-{random.randint(1, 999):03d}",
+                "amount": round(secrets.SystemRandom().uniform(5, 500), 2),
+                "sku": f"SKU-{secrets.randbelow(999) + 1:03d}",
             }
         ),
     )

@@ -36,7 +36,7 @@ fi
 DIGEST=$(aws ecr describe-images --region "$REGION" --repository-name "$ECR_REPO" \
   --image-ids imageTag="${IMAGE_TAG}" --query 'imageDetails[0].imageDigest' --output text)
 if [[ -z "$DIGEST" || "$DIGEST" == "None" ]]; then
-  echo "ERROR: image tag ${IMAGE_TAG} not found in ${ECR_REPO}"
+  echo "ERROR: image tag ${IMAGE_TAG} not found in ${ECR_REPO}" >&2
   exit 1
 fi
 echo "deploying ${ECR}@${DIGEST} (tag=${IMAGE_TAG} env=${ENV_NAME})"

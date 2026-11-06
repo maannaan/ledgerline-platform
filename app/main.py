@@ -214,7 +214,13 @@ def get_record(
     return {"id": row[0], "tenant_id": row[1], "payload": row[2]}
 
 
-@app.get("/reports/heavy")
+@app.get(
+    "/reports/heavy",
+    responses={
+        503: {"description": "Service not ready (semaphore/settings uninitialized)"},
+        429: {"description": "Heavy report concurrency limit reached"},
+    },
+)
 def heavy_report(principal: Principal = Depends(require_tenant)):
     """
     Expensive self-join kept for Cobalt noisy-neighbour drills.

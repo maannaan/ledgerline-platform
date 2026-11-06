@@ -55,12 +55,13 @@ def connection(*, autocommit: bool = False) -> Iterator[psycopg.Connection]:
         conn.autocommit = autocommit
         try:
             yield conn
-            if not autocommit:
-                conn.commit()
         except Exception:
             if not autocommit:
                 conn.rollback()
             raise
+        else:
+            if not autocommit:
+                conn.commit()
 
 
 def ping() -> bool:

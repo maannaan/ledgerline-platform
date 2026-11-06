@@ -7,7 +7,8 @@ services:
       - .env
     environment:
       # Host-side seed script may override; container must use service DNS name.
-      DATABASE_URL: postgresql://admin:admin123@db:5432/ledgerline
+      # Lab-only default — override via .env for anything beyond local compose.
+      DATABASE_URL: postgresql://admin:${COMPOSE_DB_PASSWORD:-ledgerline_local_only}@db:5432/ledgerline
       ENVIRONMENT: local
     depends_on:
       db:
@@ -17,7 +18,7 @@ services:
     image: postgres:16
     environment:
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin123
+      POSTGRES_PASSWORD: ${COMPOSE_DB_PASSWORD:-ledgerline_local_only}
       POSTGRES_DB: ledgerline
     ports:
       - "5432:5432"

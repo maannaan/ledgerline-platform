@@ -7,19 +7,18 @@ on:
   workflow_dispatch:
 
 # No GitHub Actions secrets. AWS via OIDC; Sonar token from Secrets Manager.
-permissions:
-  id-token: write
-  contents: read
-
 jobs:
   test-and-scan:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     services:
       postgres:
         image: postgres:16
         env:
           POSTGRES_USER: admin
-          POSTGRES_PASSWORD: admin123
+          POSTGRES_PASSWORD: ci_ephemeral_db_only
           POSTGRES_DB: ledgerline
         ports:
           - 5432:5432
@@ -30,7 +29,8 @@ jobs:
           --health-retries 10
 
     env:
-      DATABASE_URL: postgresql://admin:admin123@localhost:5432/ledgerline
+      # Ephemeral CI DB only (not production).
+      DATABASE_URL: postgresql://admin:ci_ephemeral_db_only@localhost:5432/ledgerline
       ADMIN_TOKEN: ci-admin-token-not-for-prod
       API_KEY_PEPPER: ci-pepper-not-for-prod
       AWS_REGION: ap-south-1
@@ -40,7 +40,7 @@ jobs:
         working-directory: app
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
 
@@ -54,7 +54,7 @@ jobs:
           echo "ci_secret_name=${SECRET}" >> "$GITHUB_OUTPUT"
 
       - name: Configure AWS credentials (OIDC)
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
         continue-on-error: true
         id: aws
         with:
@@ -64,15 +64,17 @@ jobs:
       - name: Fetch CI secret from Secrets Manager
         if: steps.aws.outcome == 'success'
         working-directory: .
+        env:
+          CI_SECRET_NAME: ${{ steps.role.outputs.ci_secret_name }}
         run: |
           chmod +x .github/scripts/fetch-ci-secret.sh
-          .github/scripts/fetch-ci-secret.sh "${{ steps.role.outputs.ci_secret_name }}"
+          .github/scripts/fetch-ci-secret.sh "$CI_SECRET_NAME"
 
       - name: Mark Sonar unavailable when OIDC not applied yet
         if: steps.aws.outcome != 'success'
         run: echo "SONAR_READY=false" >> "$GITHUB_ENV"
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
           cache: pip
@@ -81,11 +83,11 @@ jobs:
             app/requirements-dev.txt
 
       - name: Install dependencies
-        run: pip install -r requirements-dev.txt
+        run: pip install --only-binary=:all: -r requirements-dev.txt
 
       - name: Dependency vulnerability scan
         run: |
-          pip install pip-audit==2.7.3
+          pip install --only-binary=:all: pip-audit==2.7.3
           pip-audit -r requirements.txt --progress-spinner off
 
       - name: Tenant isolation + unit tests
@@ -93,7 +95,7 @@ jobs:
 
       - name: SonarCloud scan
         if: env.SONAR_READY == 'true'
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: SonarSource/sonarqube-scan-action@2f77a1ec69fb1d595b06f35ab27e97605bdef703 # v5
         env:
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
           SONAR_HOST_URL: https://sonarcloud.io
@@ -105,7 +107,7 @@ jobs:
         run: docker build -t ledgerline-api:ci ./app
 
       - name: Container vulnerability scan (Trivy)
-        uses: aquasecurity/trivy-action@v0.36.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: ledgerline-api:ci
           format: table
@@ -116,12 +118,14 @@ jobs:
 
   terraform-validate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     defaults:
       run:
         working-directory: infra/environments/staging
     steps:
-      - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
         with:
           terraform_version: "1.9.0"
       - name: Terraform fmt + validate
