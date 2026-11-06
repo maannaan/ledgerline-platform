@@ -152,12 +152,12 @@ module "budget" {
   alert_emails      = var.budget_alert_emails
 }
 
+# Reuse account OIDC provider (CreateOpenIDConnectProvider 409 if managed here).
 module "github_oidc" {
   source                 = "../../modules/github_oidc"
   name_prefix            = local.name_prefix
   aws_region             = var.aws_region
   github_org_repo        = var.github_org_repo
-  # Account already has token.actions.githubusercontent.com (409 if re-created).
   manage_oidc_provider   = false
   ecr_repository_arn     = module.ecs_api.ecr_repository_arn
   ecs_execution_role_arn = module.ecs_api.ecs_execution_role_arn
