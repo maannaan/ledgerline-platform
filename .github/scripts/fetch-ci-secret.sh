@@ -13,6 +13,11 @@ RAW=$(aws secretsmanager get-secret-value \
 SONAR_TOKEN=$(python3 -c 'import json,sys; print(json.loads(sys.argv[1]).get("SONAR_TOKEN",""))' "$RAW")
 ALB_SMOKE_URL=$(python3 -c 'import json,sys; print(json.loads(sys.argv[1]).get("ALB_SMOKE_URL",""))' "$RAW")
 
+# Mask token so Actions logs never print it.
+if [[ -n "$SONAR_TOKEN" && "$SONAR_TOKEN" != "REPLACE_ME" ]]; then
+  echo "::add-mask::${SONAR_TOKEN}"
+fi
+
 {
   echo "SONAR_TOKEN=${SONAR_TOKEN}"
   echo "ALB_SMOKE_URL=${ALB_SMOKE_URL}"
