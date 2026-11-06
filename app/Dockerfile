@@ -8,8 +8,7 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-# Versions pinned with == in requirements.txt (pip-audit + Trivy also gate deps).
-RUN pip install --no-cache-dir -r requirements.txt  # NOSONAR
+RUN pip install --no-cache-dir "--only-binary=:all:" -r requirements.txt
 
 # Explicit file copies only (avoid recursive COPY .).
 COPY config.py auth.py db.py main.py telemetry.py logging_setup.py audit.py bootstrap_auth.py seed.py ./

@@ -83,12 +83,14 @@ jobs:
             app/requirements-dev.txt
 
       - name: Install dependencies
-        run: pip install -r requirements-dev.txt
+        run: |
+          chmod +x ci_install_deps.sh
+          ./ci_install_deps.sh
 
       - name: Dependency vulnerability scan
         run: |
-          pip install pip-audit==2.7.3
-          pip-audit -r requirements.txt --progress-spinner off
+          chmod +x ci_pip_audit.sh
+          ./ci_pip_audit.sh
 
       - name: Tenant isolation + unit tests
         run: python -m pytest
