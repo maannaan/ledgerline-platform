@@ -83,11 +83,11 @@ jobs:
             app/requirements-dev.txt
 
       - name: Install dependencies
-        run: pip install --only-binary=:all: -r requirements-dev.txt
+        run: pip install "--only-binary=:all:" -r requirements-dev.txt
 
       - name: Dependency vulnerability scan
         run: |
-          pip install --only-binary=:all: pip-audit==2.7.3
+          pip install "--only-binary=:all:" pip-audit==2.7.3
           pip-audit -r requirements.txt --progress-spinner off
 
       - name: Tenant isolation + unit tests
