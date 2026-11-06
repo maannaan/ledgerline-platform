@@ -22,7 +22,9 @@ aws secretsmanager put-secret-value --region ap-south-1 --secret-id ll-staging/c
 rm /tmp/ci.json
 ```
 
-Create a SonarCloud project and align `sonar.organization` / `sonar.projectKey` in `sonar-project.properties`.
+Create a SonarCloud project (`croodycoder` / `maannaan_ledgerline-platform`) and align `sonar-project.properties`.
+
+**Analysis mode:** prefer **Automatic Analysis** (GitHub app). Do **not** also run CI scanner — Sonar rejects dual analysis. Optional CD `run_sonar=true` only if AutoScan is disabled in SonarCloud → Administration → Analysis Method.
 
 ## Local deploy (tag + digest)
 

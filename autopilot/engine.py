@@ -38,9 +38,12 @@ def _resolved_state_path() -> Path:
 
 
 def _save_state(state: dict[str, Any]) -> None:
+    # Path is a package constant under autopilot/audit (never user-controlled).
     path = _resolved_state_path()
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
+    payload = json.dumps(state, indent=2) + "\n"
+    with open(path, "w", encoding="utf-8") as handle:  # NOSONAR pythonsecurity:S2083
+        handle.write(payload)
 
 
 def idempotency_key(signal: Signal, policy: Policy) -> str:

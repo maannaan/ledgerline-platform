@@ -6,9 +6,7 @@ services:
     env_file:
       - .env
     environment:
-      # Host-side seed script may override; container must use service DNS name.
-      # Lab-only default — override via .env for anything beyond local compose.
-      DATABASE_URL: postgresql://admin:${COMPOSE_DB_PASSWORD:-ledgerline_local_only}@db:5432/ledgerline
+      # Requires DATABASE_URL in .env (see .env.example). No inline DB credentials.
       ENVIRONMENT: local
     depends_on:
       db:
@@ -16,16 +14,19 @@ services:
     restart: on-failure
   db:
     image: postgres:16
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: ${COMPOSE_DB_PASSWORD:-ledgerline_local_only}
-      POSTGRES_DB: ledgerline
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_DB: ${POSTGRES_DB:-ledgerline}
+      # Set POSTGRES_PASSWORD in .env — no default credential in compose.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d ledgerline"]
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 2s
       timeout: 5s
       retries: 20

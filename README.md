@@ -17,29 +17,75 @@ Secure, multi-tenant B2B SaaS control plane: FastAPI + Postgres on AWS (`ap-sout
 
 ## Architecture
 
-```text
-                    Internet
-                        │
-                        ▼
-              ┌─────────────────┐
-              │  ALB (HTTP*)    │  *TLS when ACM domain set
-              └────────┬────────┘
-                       │
-              ┌────────▼────────┐
-              │ ECS Fargate API │  FastAPI · digest-pinned image
-              │ (public IP, no NAT — cost lean)
-              └────────┬────────┘
-         ┌─────────────┼─────────────┐
-         ▼             ▼             ▼
-  Secrets Manager   CloudWatch    ECR
-  (DB/admin/pepper) logs/metrics  images
-         │
-    ┌────┴────────────────────┐
-    ▼                         ▼
- Shared RDS              Dedicated RDS
- (Acme, Brightpath, …)   (Delta + KMS CMK)
- Postgres 16 · encrypted · private SG
+### AWS architecture (staging · `ap-south-1`)
+
+How the platform is used in AWS: client traffic, data plane, and delivery plane.
+
+```mermaid
+flowchart TB
+  subgraph clients [Clients]
+    browser[API clients / demos]
+    gha[GitHub Actions CI/CD]
+  end
+
+  subgraph edge [Edge]
+    alb["ALB ll-staging-alb<br/>HTTP today · TLS when ACM set<br/>health: /ready"]
+  end
+
+  subgraph compute [Compute · public subnets · no NAT]
+    ecs["ECS Fargate service<br/>ll-staging-api<br/>digest-pinned image · rolling + circuit breaker"]
+  end
+
+  subgraph data [Data · private via SG only]
+    sharedRds["RDS Postgres 16 shared<br/>Acme Brightpath Cobalt Harbor"]
+    deltaRds["RDS Postgres 16 dedicated<br/>Delta Finance"]
+    kmsShared["KMS CMK shared"]
+    kmsDelta["KMS CMK Delta"]
+  end
+
+  subgraph platform [Platform services]
+    smApp["Secrets Manager<br/>ll-staging/app<br/>DATABASE_URL ADMIN_TOKEN PEPPER"]
+    smCi["Secrets Manager<br/>ll-staging/ci<br/>SONAR_TOKEN ALB_SMOKE_URL"]
+    ecr["ECR ll-staging-api"]
+    cw["CloudWatch<br/>logs metrics dashboard alarms SNS"]
+    budget["AWS Budgets<br/>ll-staging-monthly"]
+  end
+
+  subgraph iam [IAM · GitHub OIDC]
+    oidc["OIDC provider<br/>token.actions.githubusercontent.com"]
+    ghaRole["Role ll-staging-gha<br/>ECR push · ECS update · read ci secret"]
+  end
+
+  browser -->|"Bearer API key"| alb
+  alb --> ecs
+  ecs -->|"task role GetSecretValue"| smApp
+  ecs --> sharedRds
+  ecs --> deltaRds
+  sharedRds --- kmsShared
+  deltaRds --- kmsDelta
+  ecs --> cw
+  ecs -->|"pull image"| ecr
+
+  gha -->|"OIDC AssumeRole<br/>no GHA secrets"| oidc
+  oidc --> ghaRole
+  ghaRole -->|"build/push tag"| ecr
+  ghaRole -->|"register task def · update service"| ecs
+  ghaRole -->|"GetSecretValue"| smCi
+  budget --> cw
 ```
+
+**Request path (runtime usage)**
+
+1. Client hits **ALB** → **ECS Fargate** task (`/records`, `/reports/heavy`, `/metrics`, …).  
+2. Task loads **Secrets Manager** `ll-staging/app` (DB URL, admin token, pepper) via execution/task roles.  
+3. Shared tenants use **shared RDS**; Delta uses **dedicated RDS + KMS**.  
+4. JSON logs + Prometheus scrape path → **CloudWatch** dashboard/alarms.
+
+**Delivery path (CI/CD usage)**
+
+1. **CI** on push: pytest, pip-audit, Trivy, terraform validate; optional Sonar via OIDC → `ll-staging/ci`.  
+2. **CD** (manual `workflow_dispatch`): selectable stages → OIDC role → **ECR** image tag → **ECS** digest-pinned deploy; rollback = redeploy prior tag.  
+3. No AWS keys in GitHub Secrets — only OIDC + ASM.
 
 **Tenant model**
 
@@ -49,6 +95,8 @@ Secure, multi-tenant B2B SaaS control plane: FastAPI + Postgres on AWS (`ap-sout
 | Dedicated | Delta | Own RDS + own KMS key + audit |
 
 **Auth logic:** `Authorization: Bearer <api_key>` → peppered SHA-256 lookup → server-derived `tenant_id`. `X-Tenant-Id` never grants access (mismatch → 403).
+
+**Lean networking:** public subnets + task public IP (no NAT Gateway); RDS not publicly accessible — app SG only.
 
 ---
 
@@ -67,8 +115,6 @@ Secure, multi-tenant B2B SaaS control plane: FastAPI + Postgres on AWS (`ap-sout
 | IaC | Terraform (staging applied; prod same modules, not applied) | Repeatable; cost-gated apply |
 | Load | k6 | Assessment script + Make targets |
 | Autopilot | Local deterministic CLI | Allowlist + dry-run + kill switch (no LLM exec) |
-
-**Lean networking:** no NAT Gateway; tasks use public IP; RDS stays private via security groups.
 
 ---
 

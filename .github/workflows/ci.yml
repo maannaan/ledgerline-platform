@@ -93,14 +93,9 @@ jobs:
       - name: Tenant isolation + unit tests
         run: python -m pytest
 
-      - name: SonarCloud scan
-        if: env.SONAR_READY == 'true'
-        uses: SonarSource/sonarqube-scan-action@2f77a1ec69fb1d595b06f35ab27e97605bdef703 # v5
-        env:
-          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io
-        with:
-          projectBaseDir: .
+      # SonarCloud Automatic Analysis is enabled on the project — do not also run
+      # CI scanner (Sonar errors: "CI analysis while Automatic Analysis is enabled").
+      # Optional CD `run_sonar` requires AutoScan disabled in SonarCloud UI.
 
       - name: Build container image
         working-directory: .
