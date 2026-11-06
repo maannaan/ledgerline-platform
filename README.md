@@ -62,7 +62,8 @@ Secure, multi-tenant B2B SaaS control plane: FastAPI + Postgres on AWS (`ap-sout
 | Edge | ALB | Health checks on `/ready` |
 | Secrets | AWS Secrets Manager | No secrets in image/git |
 | Crypto | KMS CMKs | Shared + per-dedicated-tenant |
-| CI | GitHub Actions | pytest, pip-audit, Trivy, `terraform validate` |
+| CI | GitHub Actions | pytest, pip-audit, Trivy, SonarCloud (token from ASM), `terraform validate` |
+| CD | Manual `workflow_dispatch` | Selectable stages; tag deploy/rollback; OIDC → IAM (no GHA secrets) |
 | IaC | Terraform (staging applied; prod same modules, not applied) | Repeatable; cost-gated apply |
 | Load | k6 | Assessment script + Make targets |
 | Autopilot | Local deterministic CLI | Allowlist + dry-run + kill switch (no LLM exec) |
@@ -150,8 +151,10 @@ make help              # platform / deploy / load / restore targets
 
 ## Staging ops (Mumbai)
 
-- ALB (example): see `assessment/CURRENT_STATE.md`  
-- Deploy: `make deploy-staging` · Rollback: `make rollback-staging`  
+- ALB (example): see local CURRENT_STATE / AWS console  
+- Deploy: `make deploy-env ENV=staging IMAGE_TAG=<tag>` · Rollback: `make rollback-env ENV=staging IMAGE_TAG=<tag>`  
+- Manual CD: GitHub Actions → **cd** (parameterized; see `docs/runbooks/deploy-rollback.md`)  
+- **No GitHub Actions secrets** — OIDC roles + ASM `ll-{env}/ci` (`SONAR_TOKEN`)  
 - Restore drill: `APPROVE_RESTORE=1 make restore-drill`  
 - Budget alarm: `ll-staging-monthly` ($75 soft gate)
 
@@ -159,7 +162,7 @@ make help              # platform / deploy / load / restore targets
 
 ## Known limitations
 
-See [`assessment/KNOWN_LIMITATIONS.md`](assessment/KNOWN_LIMITATIONS.md). Notable: ALB HTTP until ACM domain; prod not applied; stretch multi-region deferred.
+See known limitations in runbooks / security questionnaire. Notable: ALB HTTP until ACM domain; prod not applied; stretch multi-region deferred.
 
 ---
 

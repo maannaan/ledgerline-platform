@@ -151,3 +151,17 @@ module "budget" {
   threshold_percent = 80
   alert_emails      = var.budget_alert_emails
 }
+
+module "github_oidc" {
+  source                 = "../../modules/github_oidc"
+  name_prefix            = local.name_prefix
+  aws_region             = var.aws_region
+  github_org_repo        = var.github_org_repo
+  manage_oidc_provider   = true
+  ecr_repository_arn     = module.ecs_api.ecr_repository_arn
+  ecs_execution_role_arn = module.ecs_api.ecs_execution_role_arn
+  ecs_task_role_arn      = module.ecs_api.ecs_task_role_arn
+  kms_key_arn            = module.shared_kms.key_arn
+  alb_smoke_url          = "http://${module.ecs_api.alb_dns_name}"
+  tags                   = local.common_tags
+}

@@ -21,3 +21,12 @@ output "tenant_inventory" {
 output "app_secret_arn" {
   value = module.secrets.secret_arn
 }
+
+output "gha_role_arn" {
+  value       = module.github_oidc.gha_role_arn
+  description = "OIDC role for GitHub Actions (commit into .github/workflows/aws-role-arns.json after apply)."
+}
+
+output "ci_secret_name" {
+  value = module.github_oidc.ci_secret_name
+}

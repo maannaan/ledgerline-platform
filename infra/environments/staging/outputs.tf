@@ -25,3 +25,12 @@ output "app_secret_arn" {
 output "networking_note" {
   value = "Lean assessment network: public subnets + assign_public_ip on Fargate; no NAT Gateway. DB remains private (SG app-only, not publicly accessible)."
 }
+
+output "gha_role_arn" {
+  value       = module.github_oidc.gha_role_arn
+  description = "OIDC role for GitHub Actions (commit into .github/workflows/aws-role-arns.json after apply)."
+}
+
+output "ci_secret_name" {
+  value = module.github_oidc.ci_secret_name
+}

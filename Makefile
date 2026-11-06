@@ -4,7 +4,8 @@ TIER ?= shared
 AWS_REGION ?= ap-south-1
 INFRA_DIR := infra/environments/$(ENV)
 
-.PHONY: help platform-init platform-validate platform-plan platform-apply onboard tenant-list migrate-acme-local isolation-test deploy-staging rollback-staging obs-apply restore-drill load-baseline load-noisy load-smoke autopilot-demo autopilot-test autopilot-status
+IMAGE_TAG ?=
+.PHONY: help platform-init platform-validate platform-plan platform-apply onboard tenant-list migrate-acme-local isolation-test deploy-staging rollback-staging deploy-env rollback-env obs-apply restore-drill load-baseline load-noisy load-smoke autopilot-demo autopilot-test autopilot-status
 
 help:
 	@echo "Ledgerline platform targets"
@@ -17,6 +18,8 @@ help:
 	@echo "  make tenant-list ENV=staging"
 	@echo "  make migrate-acme-local"
 	@echo "  make isolation-test"
+	@echo "  make deploy-env ENV=staging IMAGE_TAG=<tag>"
+	@echo "  make rollback-env ENV=staging IMAGE_TAG=<tag>"
 	@echo "  make restore-drill          # REQUIRES APPROVE_RESTORE=1"
 	@echo "  make load-smoke / load-baseline / load-noisy  # needs BASE_URL TENANTS"
 	@echo "  make autopilot-demo / autopilot-test / autopilot-status"
@@ -59,6 +62,14 @@ deploy-staging:
 
 rollback-staging:
 	./infra/scripts/rollback_staging.sh
+
+deploy-env:
+	@test -n "$(IMAGE_TAG)" || (echo "IMAGE_TAG required"; exit 1)
+	./infra/scripts/deploy_env.sh "$(ENV)" "$(IMAGE_TAG)"
+
+rollback-env:
+	@test -n "$(IMAGE_TAG)" || (echo "IMAGE_TAG required"; exit 1)
+	./infra/scripts/rollback_env.sh "$(ENV)" "$(IMAGE_TAG)"
 
 obs-apply:
 	./observability/scripts/apply_cloudwatch.sh

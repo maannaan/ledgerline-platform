@@ -79,3 +79,9 @@ variable "acm_certificate_arn" {
   default     = null
   nullable    = true
 }
+
+variable "github_org_repo" {
+  type        = string
+  description = "GitHub org/repo trusted by OIDC (Actions → IAM)."
+  default     = "maannaan/ledgerline-platform"
+}

@@ -6,6 +6,11 @@ on:
   pull_request:
   workflow_dispatch:
 
+# No GitHub Actions secrets. AWS via OIDC; Sonar token from Secrets Manager.
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   test-and-scan:
     runs-on: ubuntu-latest
@@ -28,6 +33,7 @@ jobs:
       DATABASE_URL: postgresql://admin:admin123@localhost:5432/ledgerline
       ADMIN_TOKEN: ci-admin-token-not-for-prod
       API_KEY_PEPPER: ci-pepper-not-for-prod
+      AWS_REGION: ap-south-1
 
     defaults:
       run:
@@ -35,6 +41,36 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve staging OIDC role
+        id: role
+        working-directory: .
+        run: |
+          ROLE=$(python3 -c 'import json; print(json.load(open(".github/workflows/aws-role-arns.json"))["staging"]["role_arn"])')
+          SECRET=$(python3 -c 'import json; print(json.load(open(".github/workflows/aws-role-arns.json"))["staging"]["ci_secret_name"])')
+          echo "role_arn=${ROLE}" >> "$GITHUB_OUTPUT"
+          echo "ci_secret_name=${SECRET}" >> "$GITHUB_OUTPUT"
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        continue-on-error: true
+        id: aws
+        with:
+          role-to-assume: ${{ steps.role.outputs.role_arn }}
+          aws-region: ap-south-1
+
+      - name: Fetch CI secret from Secrets Manager
+        if: steps.aws.outcome == 'success'
+        working-directory: .
+        run: |
+          chmod +x .github/scripts/fetch-ci-secret.sh
+          .github/scripts/fetch-ci-secret.sh "${{ steps.role.outputs.ci_secret_name }}"
+
+      - name: Mark Sonar unavailable when OIDC not applied yet
+        if: steps.aws.outcome != 'success'
+        run: echo "SONAR_READY=false" >> "$GITHUB_ENV"
 
       - uses: actions/setup-python@v5
         with:
@@ -54,6 +90,15 @@ jobs:
 
       - name: Tenant isolation + unit tests
         run: python -m pytest
+
+      - name: SonarCloud scan
+        if: env.SONAR_READY == 'true'
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
+        with:
+          projectBaseDir: .
 
       - name: Build container image
         working-directory: .

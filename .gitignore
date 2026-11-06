@@ -69,3 +69,12 @@ loadtest/results/**/*.json
 pgdata/
 .pdf-extract.txt
 .loadtest-tenants.env
+
+# Candidate-private (keep local; do not publish)
+/assessment/
+docs/TECHNICAL_QA.md
+docs/DEMO_RUNBOOK.md
+docs/FOUNDER_BRIEFING.md
+docs/DAILY_PROGRESS.md
+docs/GITHUB_FIRST_PUSH.md
+docs/IMPLEMENTATION_WALKTHROUGH.md

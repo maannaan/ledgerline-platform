@@ -1,0 +1,12 @@
+{
+  "comment": "Non-secret OIDC role ARNs. Update after terraform apply of github_oidc module. No GitHub Actions secrets.",
+  "region": "ap-south-1",
+  "staging": {
+    "role_arn": "arn:aws:iam::660442155240:role/ll-staging-gha",
+    "ci_secret_name": "ll-staging/ci"
+  },
+  "production": {
+    "role_arn": "arn:aws:iam::660442155240:role/ll-production-gha",
+    "ci_secret_name": "ll-production/ci"
+  }
+}
