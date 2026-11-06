@@ -26,6 +26,8 @@ Create a SonarCloud project (`croodycoder` / `maannaan_ledgerline-platform`) and
 
 **Analysis mode:** prefer **Automatic Analysis** (GitHub app). Do **not** also run CI scanner — Sonar rejects dual analysis. Optional CD `run_sonar=true` only if AutoScan is disabled in SonarCloud → Administration → Analysis Method.
 
+`sonar.sources` analyzes `app/`, `autopilot/`, `infra/` only (workflows/compose are delivery fixtures, not product code).
+
 ## Local deploy (tag + digest)
 
 ```bash
