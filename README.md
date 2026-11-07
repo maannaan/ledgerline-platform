@@ -2,24 +2,36 @@
 
 Predixion AI — **Founding Reliability Engineer** live assessment.
 
-Secure, multi-tenant B2B SaaS control plane: FastAPI + Postgres on AWS (`ap-south-1`), with shared and dedicated tenant tiers, CI, observability, timed restore, load evidence, runbooks, and a deterministic **Reliability Autopilot**.
+Secure, multi-tenant B2B SaaS API: FastAPI + Postgres on AWS (`ap-south-1`), shared and dedicated tenant tiers, CI/CD, observability, timed restore, load evidence, runbooks, and a deterministic **Reliability Autopilot**.
 
-| Doc | Purpose |
-|-----|---------|
-| [`assessment/CURRENT_STATE.md`](assessment/CURRENT_STATE.md) | Live handoff / what is running |
-| [`assessment/REQUIREMENTS_MATRIX.md`](assessment/REQUIREMENTS_MATRIX.md) | Requirement IDs → status + evidence |
-| [`docs/FOUNDER_BRIEFING.md`](docs/FOUNDER_BRIEFING.md) | Interview one-pager |
-| [`docs/DEMO_RUNBOOK.md`](docs/DEMO_RUNBOOK.md) | Demo commands |
+| Doc (in this repo) | Purpose |
+|--------------------|---------|
+| [`SECURITY.md`](SECURITY.md) | Flaws found and fixes |
 | [`docs/security-questionnaire.md`](docs/security-questionnaire.md) | Delta Finance answers |
+| [`docs/runbooks/`](docs/runbooks/) | Onboard, restore, IR, deploy/rollback |
+| [`docs/COST_MODEL.md`](docs/COST_MODEL.md) | Shared vs dedicated cost |
+| [`docs/90_DAY_PLAN.md`](docs/90_DAY_PLAN.md) | First 90 days + first hire |
+| [`docs/post-incident-review.md`](docs/post-incident-review.md) | Blameless PIR |
+| [`docs/evidence/`](docs/evidence/) | Saved command/output evidence |
 | [`AGENTS.md`](AGENTS.md) | How agents work this repo |
+
+---
+
+## Live endpoints (keep up until live session)
+
+| Env | ALB | Notes |
+|-----|-----|--------|
+| **Staging** | `http://ll-staging-alb-1605781679.ap-south-1.elb.amazonaws.com` | Primary evidence / incident drill |
+| **Production** | `http://ll-production-alb-2062045131.ap-south-1.elb.amazonaws.com` | Same modules; lean apply for dual-env parity |
+
+Smoke: `GET /ready` → `{"status":"ready"}`.  
+Auth: `Authorization: Bearer <lab_api_key>` (keys shared with reviewers out-of-band — not committed).
 
 ---
 
 ## Architecture
 
-### AWS architecture (staging · `ap-south-1`)
-
-How the platform is used in AWS: client traffic, data plane, and delivery plane.
+### AWS (staging shown · production uses the same modules / `ll-production-*`)
 
 ```mermaid
 flowchart TB
@@ -29,11 +41,11 @@ flowchart TB
   end
 
   subgraph edge [Edge]
-    alb["ALB ll-staging-alb<br/>HTTP today · TLS when ACM set<br/>health: /ready"]
+    alb["ALB<br/>HTTP today · TLS when ACM set<br/>health: /ready"]
   end
 
   subgraph compute [Compute · public subnets · no NAT]
-    ecs["ECS Fargate service<br/>ll-staging-api<br/>digest-pinned image · rolling + circuit breaker"]
+    ecs["ECS Fargate<br/>digest-pinned image · rolling + circuit breaker"]
   end
 
   subgraph data [Data · private via SG only]
@@ -44,118 +56,116 @@ flowchart TB
   end
 
   subgraph platform [Platform services]
-    smApp["Secrets Manager<br/>ll-staging/app<br/>DATABASE_URL ADMIN_TOKEN PEPPER"]
-    smCi["Secrets Manager<br/>ll-staging/ci<br/>SONAR_TOKEN ALB_SMOKE_URL"]
-    ecr["ECR ll-staging-api"]
+    smApp["Secrets Manager<br/>ll-{env}/app"]
+    smCi["Secrets Manager<br/>ll-{env}/ci"]
+    ecr["ECR ll-{env}-api"]
     cw["CloudWatch<br/>logs metrics dashboard alarms SNS"]
-    budget["AWS Budgets<br/>ll-staging-monthly"]
+    budget["AWS Budgets"]
   end
 
   subgraph iam [IAM · GitHub OIDC]
-    oidc["OIDC provider<br/>token.actions.githubusercontent.com"]
-    ghaRole["Role ll-staging-gha<br/>ECR push · ECS update · read ci secret"]
+    oidc["OIDC provider"]
+    ghaRole["Role ll-{env}-gha<br/>ECR · ECS · read ci secret"]
   end
 
   browser -->|"Bearer API key"| alb
   alb --> ecs
-  ecs -->|"task role GetSecretValue"| smApp
+  ecs -->|"GetSecretValue"| smApp
   ecs --> sharedRds
   ecs --> deltaRds
   sharedRds --- kmsShared
   deltaRds --- kmsDelta
   ecs --> cw
-  ecs -->|"pull image"| ecr
+  ecs --> ecr
 
   gha -->|"OIDC AssumeRole<br/>no GHA secrets"| oidc
   oidc --> ghaRole
-  ghaRole -->|"build/push tag"| ecr
-  ghaRole -->|"register task def · update service"| ecs
-  ghaRole -->|"GetSecretValue"| smCi
+  ghaRole --> ecr
+  ghaRole --> ecs
+  ghaRole --> smCi
   budget --> cw
 ```
 
-**Request path (runtime usage)**
+**Runtime**
 
-1. Client hits **ALB** → **ECS Fargate** task (`/records`, `/reports/heavy`, `/metrics`, …).  
-2. Task loads **Secrets Manager** `ll-staging/app` (DB URL, admin token, pepper) via execution/task roles.  
-3. Shared tenants use **shared RDS**; Delta uses **dedicated RDS + KMS**.  
-4. JSON logs + Prometheus scrape path → **CloudWatch** dashboard/alarms.
+1. Client → **ALB** → **ECS Fargate**.  
+2. Task reads **Secrets Manager** `ll-{env}/app` (DB URL, admin token, pepper).  
+3. Shared tenants → shared RDS; Delta → dedicated RDS + KMS.  
+4. JSON logs + `/metrics` → CloudWatch.
 
-**Delivery path (CI/CD usage)**
+**CI/CD**
 
-1. **CI** on push: pytest, pip-audit, Trivy, terraform validate; optional Sonar via OIDC → `ll-staging/ci`.  
-2. **CD** (manual `workflow_dispatch`): selectable stages → OIDC role → **ECR** image tag → **ECS** digest-pinned deploy; rollback = redeploy prior tag.  
-3. No AWS keys in GitHub Secrets — only OIDC + ASM.
+1. **CI** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)): pytest, pip-audit, Trivy, terraform validate; SonarCloud via OIDC → ASM when token present.  
+2. **CD** ([`.github/workflows/cd.yml`](.github/workflows/cd.yml)): manual `workflow_dispatch` → OIDC → ECR tag → ECS digest deploy / tag rollback.  
+3. No long-lived AWS keys in GitHub Secrets — OIDC + ASM only.
 
-**Tenant model**
+**Tenants**
 
-| Tier | Tenants (demo) | Isolation |
+| Tier | Demo tenants | Isolation |
 |------|----------------|-----------|
 | Shared | Acme, Brightpath, Cobalt, Harbor | App-layer `tenant_id` + API keys |
-| Dedicated | Delta | Own RDS + own KMS key + audit |
+| Dedicated | Delta | Own RDS + own KMS + audit |
 
-**Auth logic:** `Authorization: Bearer <api_key>` → peppered SHA-256 lookup → server-derived `tenant_id`. `X-Tenant-Id` never grants access (mismatch → 403).
+**Auth:** Bearer API key → peppered SHA-256 → server-derived `tenant_id`. `X-Tenant-Id` never grants access (mismatch → **403**).
 
-**Lean networking:** public subnets + task public IP (no NAT Gateway); RDS not publicly accessible — app SG only.
+**Network:** public subnets + task public IP (no NAT); RDS not publicly accessible.
 
 ---
 
 ## Tech stack
 
-| Layer | Choice | Why |
-|-------|--------|-----|
-| API | FastAPI / Python 3.12 | Assessment reference stack; fast to secure |
-| DB | Postgres 16 on RDS `db.t4g.micro` | Managed backups/PITR; KMS encryption |
-| Compute | ECS Fargate | No SSH pets; rolling deploy + circuit breaker |
-| Edge | ALB | Health checks on `/ready` |
-| Secrets | AWS Secrets Manager | No secrets in image/git |
-| Crypto | KMS CMKs | Shared + per-dedicated-tenant |
-| CI | GitHub Actions | pytest, pip-audit, Trivy, SonarCloud (token from ASM), `terraform validate` |
-| CD | Manual `workflow_dispatch` | Selectable stages; tag deploy/rollback; OIDC → IAM (no GHA secrets) |
-| IaC | Terraform (staging applied; prod same modules, not applied) | Repeatable; cost-gated apply |
-| Load | k6 | Assessment script + Make targets |
-| Autopilot | Local deterministic CLI | Allowlist + dry-run + kill switch (no LLM exec) |
+| Layer | Choice |
+|-------|--------|
+| API | FastAPI / Python 3.12 |
+| DB | Postgres 16 on RDS `db.t4g.micro` |
+| Compute | ECS Fargate |
+| Edge | ALB (`/ready` health) |
+| Secrets | AWS Secrets Manager |
+| Crypto | KMS CMKs (shared + per dedicated tenant) |
+| CI/CD | GitHub Actions + OIDC |
+| IaC | Terraform — **staging and production both applied** (lean) |
+| Load | k6 |
+| Autopilot | Local deterministic CLI (dry-run, kill switch) |
 
 ---
 
-## Approach (how we worked)
+## Approach
 
-1. **Depth over breadth** — security + reliability evidence before stretch (multi-region, Autopilot after core).  
-2. **Never trust headers** — fix reference auth flaws first; automated isolation tests in CI.  
-3. **Staging-only cloud** — prod Terraform validated but not applied (budget).  
-4. **Honest SLOs** — measure, fix root cause, re-measure; document capacity profiles.  
-5. **Gates** — `APPROVE_APPLY=1`, `APPROVE_RESTORE=1`, `APPROVE_AUTOPILOT=1` before billable/risky actions.
+1. **Depth over breadth** — security + reliability evidence before stretch goals.  
+2. **Never trust headers** — real API keys; isolation tests in CI.  
+3. **Dual env from same modules** — staging for deep drills; production lean for Task 1.2 parity.  
+4. **Honest SLOs** — measure, fix, re-measure; document lean vs capacity profiles.  
+5. **Gates** — `APPROVE_APPLY` / `APPROVE_RESTORE` / `APPROVE_AUTOPILOT` before billable/risky actions.
 
 ---
 
-## Application logic (high level)
+## Application (high level)
 
 | Route | Behavior |
 |-------|----------|
-| `POST/GET /records` | Tenant-scoped CRUD; list uses `LIMIT` (default 50); ILIKE search only when `search` set |
-| `GET /records/{id}` | IDOR-safe: `id` **and** `tenant_id` |
-| `GET /reports/heavy` | Expensive self-join for noisy-neighbour drills; concurrency cap + short `statement_timeout` |
-| `/health` | Liveness |
-| `/ready` | DB ping |
-| `/metrics` | Prometheus (bounded tenant/endpoint labels) |
-| `/admin/...` | Admin Bearer + append-only audit events |
+| `POST/GET /records` | Tenant-scoped; list `LIMIT` (default 50) |
+| `GET /records/{id}` | `id` **and** `tenant_id` |
+| `GET /reports/heavy` | Noisy-neighbour drill; concurrency cap |
+| `/health` · `/ready` | Liveness · DB ping |
+| `/metrics` | Prometheus (bounded labels) |
+| `/admin/...` | Admin Bearer + append-only audit |
 
 ---
 
 ## Benchmarks & evidence (staging)
 
-| Test | Config | Result | Evidence |
-|------|--------|--------|----------|
-| Isolation | pytest in CI | Green | GHA + `docs/evidence/phase2/` |
-| Restore (Evergreen-class) | Snapshot → new RDS | **RTO 8.25 min** · **RPO 6.23 min** | `docs/evidence/phase5/restore-drill-*.json` |
-| Load smoke | 20 RPS / 30s | p95 ~135 ms | `docs/evidence/phase5/load-smoke.txt` |
-| Load (lean 256CPU) | 200 RPS / 10m | ~120 RPS · p95 ~7s (capacity short) | `docs/evidence/phase5/load-baseline-tuned.txt` |
-| Noisy (Cobalt) | + heavy VUs | p95 ~7.27s vs 7.15s — isolation OK | `docs/evidence/phase5/load-noisy.txt` |
-| **Capacity profile** | **512 CPU / 1GB × 2 tasks** | **~200 RPS · p95 131.6 ms · 0% errors** | `docs/evidence/phase8/load-capacity.txt` |
+| Test | Result | Evidence |
+|------|--------|----------|
+| Isolation | pytest green in CI | [`docs/evidence/phase2/`](docs/evidence/phase2/) |
+| Restore (Evergreen-class) | **RTO 8.25 min** · **RPO 6.23 min** | [`docs/evidence/phase5/restore-drill-20261103T100335Z.json`](docs/evidence/phase5/restore-drill-20261103T100335Z.json) |
+| Load lean (256 CPU ×1) | Misses 200 RPS SLO | [`docs/evidence/phase5/load-baseline-tuned.txt`](docs/evidence/phase5/load-baseline-tuned.txt) |
+| Noisy (Cobalt) | Other tenants not materially hurt | [`docs/evidence/phase5/load-noisy.txt`](docs/evidence/phase5/load-noisy.txt) |
+| **Capacity (512 CPU / 1GB ×2)** | **~200 RPS · p95 131.6 ms · 0% errors** | [`docs/evidence/phase8/load-capacity.txt`](docs/evidence/phase8/load-capacity.txt) |
+| Acme seed migration | 20002 → 20002 | [`docs/evidence/phase3/acme-local-migration.txt`](docs/evidence/phase3/acme-local-migration.txt) |
 
-**Operating tip:** keep **lean** (256/512 ×1) for idle cost; scale to **demo/load profile** (512/1024 ×2) when proving the 200 RPS SLO.
+Idle ops stay **lean** (256/512 ×1). Scale to **512/1024 ×2** to prove the 200 RPS SLO.
 
-First bottleneck was unbounded `/records` (~300KB responses) — fixed with `LIMIT` + skip empty ILIKE. Writeup: `docs/evidence/phase5/bottleneck-writeup.md`.
+Bottleneck writeup: [`docs/evidence/phase5/bottleneck-writeup.md`](docs/evidence/phase5/bottleneck-writeup.md).
 
 ---
 
@@ -163,16 +173,16 @@ First bottleneck was unbounded `/records` (~300KB responses) — fixed with `LIM
 
 ```text
 app/                 FastAPI service, auth, tests, Dockerfile
-infra/               Terraform modules + staging/production envs + scripts
-observability/       CloudWatch dashboard/alarms, SLOs, error budget
-loadtest/            k6 scripts (results/ local only — not required on GitHub)
-autopilot/           Reliability Autopilot (policies, CLI, demo, tests)
-docs/                Founder, runbooks, cost, 90-day, evidence/
-assessment/          Matrix, CURRENT_STATE, source PDF/playbook
-.github/workflows/   ci.yml
+infra/               Terraform modules + staging/production + scripts
+observability/       Dashboards, alarms, SLOs, error budget
+loadtest/            k6 scripts
+autopilot/           Reliability Autopilot
+docs/                Runbooks, cost, 90-day, questionnaire, evidence
+.github/workflows/   ci.yml · cd.yml
+SECURITY.md
 ```
 
-**Do not commit:** `.env`, `.cloud-lab-keys`, `*.tfvars`, tfstate, raw `loadtest/results/*.json` (sanitized copies live under `docs/evidence/`).
+**Do not commit:** `.env`, `.cloud-lab-keys*`, `*.tfvars`, tfstate, raw load-test key files.
 
 ---
 
@@ -184,34 +194,36 @@ docker compose up --build -d
 docker compose exec api python bootstrap_auth.py
 docker compose exec -e DATABASE_URL=postgresql://admin:admin123@db:5432/ledgerline \
   -e ADMIN_TOKEN -e API_KEY_PEPPER api python -m pytest
-```
-
-Use `Authorization: Bearer <key>` from bootstrap.
-
-```bash
-make autopilot-demo    # dry-run remediations + kill switch
-make help              # platform / deploy / load / restore targets
+make autopilot-demo
+make help
 ```
 
 ---
 
-## Staging ops (Mumbai)
+## Cloud ops
 
-- ALB (example): see local CURRENT_STATE / AWS console  
-- Deploy: `make deploy-env ENV=staging IMAGE_TAG=<tag>` · Rollback: `make rollback-env ENV=staging IMAGE_TAG=<tag>`  
-- Manual CD: GitHub Actions → **cd** (parameterized; see `docs/runbooks/deploy-rollback.md`)  
-- **No GitHub Actions secrets** — OIDC roles + ASM `ll-{env}/ci` (`SONAR_TOKEN`)  
-- Restore drill: `APPROVE_RESTORE=1 make restore-drill`  
-- Budget alarm: `ll-staging-monthly` ($75 soft gate)
+```bash
+make deploy-env ENV=staging IMAGE_TAG=<tag>
+make rollback-env ENV=staging IMAGE_TAG=<tag>
+# same for ENV=production
+# Manual CD: Actions → cd workflow (docs/runbooks/deploy-rollback.md)
+APPROVE_RESTORE=1 make restore-drill   # billable — ask first
+```
+
+Acme cutover (&lt;5 min downtime design): [`docs/runbooks/acme-cutover.md`](docs/runbooks/acme-cutover.md).
 
 ---
 
 ## Known limitations
 
-See known limitations in runbooks / security questionnaire. Notable: ALB HTTP until ACM domain; prod not applied; stretch multi-region deferred.
+- ALB is **HTTP** until a domain + ACM cert (`docs/runbooks/enable-tls.md`)  
+- Lean idle size does **not** hold 200 RPS; use documented capacity profile  
+- App-layer tenancy only (no Postgres RLS yet)  
+- Load/restore deep evidence is on **staging**; production is lean dual-env parity + smoke  
+- Stretch (multi-region, Fjord 10x, etc.) deferred after core evidence  
 
 ---
 
 ## AI usage
 
-Cursor / AI assistants were used. Designs remain explainable and candidate-owned for the live founder session.
+Cursor / AI assistants were used for implementation speed. Designs remain explainable and candidate-owned for the live session.
