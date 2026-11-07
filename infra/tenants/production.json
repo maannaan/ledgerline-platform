@@ -1,0 +1,15 @@
+{
+  "shared_tenants": [
+    "acme",
+    "brightpath",
+    "cobalt",
+    "harbor"
+  ],
+  "dedicated_tenants": {
+    "delta": {
+      "notes": "Delta Finance — dedicated DB + KMS key + admin audit",
+      "instance_class": "db.t4g.micro",
+      "backup_retention_days": 7
+    }
+  }
+}

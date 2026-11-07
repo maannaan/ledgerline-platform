@@ -1,0 +1,218 @@
+[0m[1mrandom_password.admin_token: Refreshing state... [id=none][0m
+[0m[1mrandom_password.api_key_pepper: Refreshing state... [id=none][0m
+[0m[1mmodule.shared_db.random_password.master: Refreshing state... [id=none][0m
+[0m[1mmodule.dedicated_db["delta"].random_password.master: Refreshing state... [id=none][0m
+[0m[1mmodule.github_oidc.data.aws_iam_openid_connect_provider.github[0]: Reading...[0m[0m
+[0m[1mmodule.dedicated_kms["delta"].data.aws_caller_identity.current: Reading...[0m[0m
+[0m[1mmodule.ecs_api.aws_iam_role.execution: Refreshing state... [id=ll-production-ecs-exec][0m
+[0m[1mmodule.ecs_api.aws_iam_role.task: Refreshing state... [id=ll-production-ecs-task][0m
+[0m[1mmodule.ecs_api.aws_ecs_cluster.this: Refreshing state... [id=arn:aws:ecs:ap-south-1:660442155240:cluster/ll-production-cluster][0m
+[0m[1mmodule.ecs_api.aws_ecr_repository.api: Refreshing state... [id=ll-production-api][0m
+[0m[1mmodule.tenant_registry.aws_ssm_parameter.tenant["delta"]: Refreshing state... [id=/ledgerline/production/tenants/delta][0m
+[0m[1mmodule.tenant_registry.aws_ssm_parameter.tenant["acme"]: Refreshing state... [id=/ledgerline/production/tenants/acme][0m
+[0m[1mmodule.ecs_api.aws_cloudwatch_log_group.api: Refreshing state... [id=/ledgerline/ll-production/api][0m
+[0m[1mmodule.budget[0].aws_budgets_budget.monthly: Refreshing state... [id=660442155240:ll-production-monthly][0m
+[0m[1mmodule.dedicated_kms["delta"].data.aws_caller_identity.current: Read complete after 0s [id=660442155240][0m
+[0m[1mmodule.tenant_registry.aws_ssm_parameter.tenant["brightpath"]: Refreshing state... [id=/ledgerline/production/tenants/brightpath][0m
+[0m[1mmodule.tenant_registry.aws_ssm_parameter.tenant["cobalt"]: Refreshing state... [id=/ledgerline/production/tenants/cobalt][0m
+[0m[1mmodule.tenant_registry.aws_ssm_parameter.tenant["harbor"]: Refreshing state... [id=/ledgerline/production/tenants/harbor][0m
+[0m[1mmodule.network.aws_vpc.this: Refreshing state... [id=vpc-07d3c0c2d46cf9800][0m
+[0m[1mmodule.network.data.aws_availability_zones.available: Reading...[0m[0m
+[0m[1mmodule.ecs_api.data.aws_elb_service_account.main: Reading...[0m[0m
+[0m[1mmodule.ecs_api.data.aws_elb_service_account.main: Read complete after 0s [id=718504428378][0m
+[0m[1mmodule.ecs_api.aws_s3_bucket.alb_logs: Refreshing state... [id=ll-production-alb-logs-20261107032555521700000001][0m
+[0m[1mmodule.shared_kms.data.aws_caller_identity.current: Reading...[0m[0m
+[0m[1mmodule.shared_kms.data.aws_caller_identity.current: Read complete after 0s [id=660442155240][0m
+[0m[1mmodule.dedicated_kms["delta"].aws_kms_key.this: Refreshing state... [id=1e76bb4a-bb7f-4136-8e20-955b6bcf4f93][0m
+[0m[1mmodule.shared_kms.aws_kms_key.this: Refreshing state... [id=ef222093-e964-47cc-9736-e304b224645a][0m
+[0m[1mmodule.network.data.aws_availability_zones.available: Read complete after 1s [id=ap-south-1][0m
+[0m[1mmodule.shared_kms.aws_kms_alias.this: Refreshing state... [id=alias/ll-production-shared][0m
+[0m[1mmodule.dedicated_kms["delta"].aws_kms_alias.this: Refreshing state... [id=alias/ll-production-delta][0m
+[0m[1mmodule.secrets.aws_secretsmanager_secret.app: Refreshing state... [id=arn:aws:secretsmanager:ap-south-1:660442155240:secret:ll-production/app-e0Iiiq][0m
+[0m[1mmodule.github_oidc.aws_secretsmanager_secret.ci: Refreshing state... [id=arn:aws:secretsmanager:ap-south-1:660442155240:secret:ll-production/ci-B0BMnr][0m
+[0m[1mmodule.github_oidc.data.aws_iam_openid_connect_provider.github[0]: Read complete after 2s [id=arn:aws:iam::660442155240:oidc-provider/token.actions.githubusercontent.com][0m
+[0m[1mmodule.github_oidc.data.aws_iam_policy_document.gha_assume: Reading...[0m[0m
+[0m[1mmodule.github_oidc.data.aws_iam_policy_document.gha_assume: Read complete after 0s [id=642868103][0m
+[0m[1mmodule.github_oidc.aws_iam_role.gha: Refreshing state... [id=ll-production-gha][0m
+[0m[1mmodule.network.aws_internet_gateway.this: Refreshing state... [id=igw-009f49d83df6244ce][0m
+[0m[1mmodule.network.aws_subnet.public["ap-south-1b"]: Refreshing state... [id=subnet-0d28ba5662a839615][0m
+[0m[1mmodule.network.aws_subnet.public["ap-south-1a"]: Refreshing state... [id=subnet-05b04739eba211c54][0m
+[0m[1mmodule.network.aws_security_group.alb: Refreshing state... [id=sg-0c0651decdfd33440][0m
+[0m[1mmodule.ecs_api.aws_lb_target_group.api: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-south-1:660442155240:targetgroup/ll-production-tg/6c28cf5695588148][0m
+[0m[1mmodule.network.aws_route_table.public: Refreshing state... [id=rtb-0898e91c52b56fd97][0m
+[0m[1mmodule.shared_db.aws_db_subnet_group.this: Refreshing state... [id=ll-production-shared-db-subnets][0m
+[0m[1mmodule.dedicated_db["delta"].aws_db_subnet_group.this: Refreshing state... [id=ll-production-delta-db-subnets][0m
+[0m[1mmodule.network.aws_route_table_association.public["ap-south-1b"]: Refreshing state... [id=rtbassoc-05281bb8ddd0b791e][0m
+[0m[1mmodule.network.aws_route_table_association.public["ap-south-1a"]: Refreshing state... [id=rtbassoc-047ffda7f5ddb060a][0m
+[0m[1mmodule.network.aws_security_group.app: Refreshing state... [id=sg-038603569da81b173][0m
+[0m[1mmodule.ecs_api.aws_iam_role_policy.execution_secrets: Refreshing state... [id=ll-production-ecs-exec:ll-production-exec-secrets][0m
+[0m[1mmodule.ecs_api.aws_iam_role_policy_attachment.execution: Refreshing state... [id=ll-production-ecs-exec-20261107032558958500000002][0m
+[0m[1mmodule.ecs_api.aws_ecs_task_definition.api: Refreshing state... [id=ll-production-api][0m
+[0m[1mmodule.network.aws_security_group.db: Refreshing state... [id=sg-0a3adc5509415f65b][0m
+[0m[1mmodule.github_oidc.data.aws_iam_policy_document.gha_permissions: Reading...[0m[0m
+[0m[1mmodule.ecs_api.aws_s3_bucket_policy.alb_logs: Refreshing state... [id=ll-production-alb-logs-20261107032555521700000001][0m
+[0m[1mmodule.github_oidc.data.aws_iam_policy_document.gha_permissions: Read complete after 0s [id=387087989][0m
+[0m[1mmodule.ecs_api.aws_s3_bucket_logging.alb_logs: Refreshing state... [id=ll-production-alb-logs-20261107032555521700000001][0m
+[0m[1mmodule.ecs_api.aws_s3_bucket_public_access_block.alb_logs: Refreshing state... [id=ll-production-alb-logs-20261107032555521700000001][0m
+[0m[1mmodule.ecs_api.aws_s3_bucket_lifecycle_configuration.alb_logs: Refreshing state... [id=ll-production-alb-logs-20261107032555521700000001][0m
+[0m[1mmodule.ecs_api.aws_lb.this: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-south-1:660442155240:loadbalancer/app/ll-production-alb/8dbbd5ea9fafe23a][0m
+[0m[1mmodule.shared_db.aws_db_instance.this: Refreshing state... [id=db-SUKB5N4SNZGG6AQI33INIAL3LI][0m
+[0m[1mmodule.github_oidc.aws_iam_role_policy.gha: Refreshing state... [id=ll-production-gha:ll-production-gha-policy][0m
+[0m[1mmodule.dedicated_db["delta"].aws_db_instance.this: Refreshing state... [id=db-K4RLCPV74LC6DQXPWK7JGMTUPE][0m
+[0m[1mmodule.github_oidc.aws_secretsmanager_secret_version.ci: Refreshing state... [id=arn:aws:secretsmanager:ap-south-1:660442155240:secret:ll-production/ci-B0BMnr|terraform-20261107032842006100000006][0m
+[0m[1mmodule.ecs_api.aws_lb_listener.http: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-south-1:660442155240:listener/app/ll-production-alb/8dbbd5ea9fafe23a/4aa7259e67eda461][0m
+[0m[1mmodule.secrets.aws_secretsmanager_secret_version.app: Refreshing state... [id=arn:aws:secretsmanager:ap-south-1:660442155240:secret:ll-production/app-e0Iiiq|terraform-20261107033400680700000008][0m
+[0m[1mmodule.ecs_api.aws_ecs_service.api: Refreshing state... [id=arn:aws:ecs:ap-south-1:660442155240:service/ll-production-cluster/ll-production-api][0m
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [32m+[0m create[0m
+  [33m~[0m update in-place[0m
+
+Terraform will perform the following actions:
+
+[1m  # module.ecs_api.aws_ecs_service.api[0m will be updated in-place
+[0m  [33m~[0m[0m resource "aws_ecs_service" "api" {
+        id                                 = "arn:aws:ecs:ap-south-1:660442155240:service/ll-production-cluster/ll-production-api"
+        name                               = "ll-production-api"
+        tags                               = {
+            "Environment" = "production"
+            "ManagedBy"   = "terraform"
+            "Project"     = "ledgerline"
+        }
+      [33m~[0m[0m task_definition                    = "arn:aws:ecs:ap-south-1:660442155240:task-definition/ll-production-api:2" [33m->[0m[0m "arn:aws:ecs:ap-south-1:660442155240:task-definition/ll-production-api:1"
+        [90m# (16 unchanged attributes hidden)[0m[0m
+
+        [90m# (4 unchanged blocks hidden)[0m[0m
+    }
+
+[1m  # module.ecs_api.aws_lb_listener.http[0m will be updated in-place
+[0m  [33m~[0m[0m resource "aws_lb_listener" "http" {
+        id                                                                  = "arn:aws:elasticloadbalancing:ap-south-1:660442155240:listener/app/ll-production-alb/8dbbd5ea9fafe23a/4aa7259e67eda461"
+        tags                                                                = {}
+        [90m# (17 unchanged attributes hidden)[0m[0m
+
+      [33m~[0m[0m default_action {
+          [33m~[0m[0m type             = "forward" [33m->[0m[0m "redirect"
+            [90m# (2 unchanged attributes hidden)[0m[0m
+
+          [32m+[0m[0m redirect {
+              [32m+[0m[0m host        = "#{host}"
+              [32m+[0m[0m path        = "/#{path}"
+              [32m+[0m[0m port        = "443"
+              [32m+[0m[0m protocol    = "HTTPS"
+              [32m+[0m[0m query       = "#{query}"
+              [32m+[0m[0m status_code = "HTTP_301"
+            }
+        }
+    }
+
+[1m  # module.ecs_api.aws_lb_listener.https[0][0m will be created
+[0m  [32m+[0m[0m resource "aws_lb_listener" "https" {
+      [32m+[0m[0m arn                                                                   = (known after apply)
+      [32m+[0m[0m certificate_arn                                                       = "arn:aws:acm:ap-south-1:660442155240:certificate/5dd0808a-b205-43a3-9eb5-ce9204e790c9"
+      [32m+[0m[0m id                                                                    = (known after apply)
+      [32m+[0m[0m load_balancer_arn                                                     = "arn:aws:elasticloadbalancing:ap-south-1:660442155240:loadbalancer/app/ll-production-alb/8dbbd5ea9fafe23a"
+      [32m+[0m[0m port                                                                  = 443
+      [32m+[0m[0m protocol                                                              = "HTTPS"
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_header_name               = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_issuer_header_name        = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_leaf_header_name          = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_serial_number_header_name = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_subject_header_name       = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_mtls_clientcert_validity_header_name      = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_tls_cipher_suite_header_name              = (known after apply)
+      [32m+[0m[0m routing_http_request_x_amzn_tls_version_header_name                   = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_allow_credentials_header_value   = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_allow_headers_header_value       = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_allow_methods_header_value       = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_allow_origin_header_value        = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_expose_headers_header_value      = (known after apply)
+      [32m+[0m[0m routing_http_response_access_control_max_age_header_value             = (known after apply)
+      [32m+[0m[0m routing_http_response_content_security_policy_header_value            = (known after apply)
+      [32m+[0m[0m routing_http_response_server_enabled                                  = (known after apply)
+      [32m+[0m[0m routing_http_response_strict_transport_security_header_value          = (known after apply)
+      [32m+[0m[0m routing_http_response_x_content_type_options_header_value             = (known after apply)
+      [32m+[0m[0m routing_http_response_x_frame_options_header_value                    = (known after apply)
+      [32m+[0m[0m ssl_policy                                                            = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+      [32m+[0m[0m tags_all                                                              = {
+          [32m+[0m[0m "Environment" = "production"
+          [32m+[0m[0m "ManagedBy"   = "terraform"
+          [32m+[0m[0m "Project"     = "ledgerline"
+        }
+      [32m+[0m[0m tcp_idle_timeout_seconds                                              = (known after apply)
+
+      [32m+[0m[0m default_action {
+          [32m+[0m[0m order            = (known after apply)
+          [32m+[0m[0m target_group_arn = "arn:aws:elasticloadbalancing:ap-south-1:660442155240:targetgroup/ll-production-tg/6c28cf5695588148"
+          [32m+[0m[0m type             = "forward"
+        }
+
+      [32m+[0m[0m mutual_authentication (known after apply)
+    }
+
+[1mPlan:[0m [0m1 to add, 2 to change, 0 to destroy.
+[0m[1mmodule.ecs_api.aws_lb_listener.https[0]: Creating...[0m[0m
+[0m[1mmodule.ecs_api.aws_lb_listener.http: Modifying... [id=arn:aws:elasticloadbalancing:ap-south-1:660442155240:listener/app/ll-production-alb/8dbbd5ea9fafe23a/4aa7259e67eda461][0m[0m
+[0m[1mmodule.ecs_api.aws_lb_listener.http: Modifications complete after 1s [id=arn:aws:elasticloadbalancing:ap-south-1:660442155240:listener/app/ll-production-alb/8dbbd5ea9fafe23a/4aa7259e67eda461][0m
+[0m[1mmodule.ecs_api.aws_ecs_service.api: Modifying... [id=arn:aws:ecs:ap-south-1:660442155240:service/ll-production-cluster/ll-production-api][0m[0m
+[0m[1mmodule.ecs_api.aws_lb_listener.https[0]: Creation complete after 1s [id=arn:aws:elasticloadbalancing:ap-south-1:660442155240:listener/app/ll-production-alb/8dbbd5ea9fafe23a/297f6b3812ef592d][0m
+[0m[1mmodule.ecs_api.aws_ecs_service.api: Modifications complete after 1s [id=arn:aws:ecs:ap-south-1:660442155240:service/ll-production-cluster/ll-production-api][0m
+[33m╷[0m[0m
+[33m│[0m [0m[1m[33mWarning: [0m[0m[1mInvalid Attribute Combination[0m
+[33m│[0m [0m
+[33m│[0m [0m[0m  with module.ecs_api.aws_lb_listener.http,
+[33m│[0m [0m  on ../../modules/ecs_api/main.tf line 188, in resource "aws_lb_listener" "http":
+[33m│[0m [0m 188: resource "aws_lb_listener" "http" [4m{[0m[0m
+[33m│[0m [0m
+[33m│[0m [0mAttribute "default_action[0].target_group_arn" cannot be specified when
+[33m│[0m [0m"default_action[0].type" is "redirect".
+[33m│[0m [0m
+[33m│[0m [0mThis will be an error in a future release.
+[33m╵[0m[0m
+[0m[1m[32m
+Apply complete! Resources: 1 added, 2 changed, 0 destroyed.[0m
+[0m[1m[32m
+Outputs:
+
+[0malb_dns_name = "ll-production-alb-2062045131.ap-south-1.elb.amazonaws.com"
+app_secret_arn = "arn:aws:secretsmanager:ap-south-1:660442155240:secret:ll-production/app-e0Iiiq"
+ci_secret_name = "ll-production/ci"
+dedicated_db_endpoints = {
+  "delta" = "ll-production-delta-pg.ctuqm8c04sdk.ap-south-1.rds.amazonaws.com"
+}
+ecr_repository_url = "660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-production-api"
+gha_role_arn = "arn:aws:iam::660442155240:role/ll-production-gha"
+shared_db_endpoint = "ll-production-shared-pg.ctuqm8c04sdk.ap-south-1.rds.amazonaws.com"
+tenant_inventory = {
+  "acme" = {
+    "db_target" = "shared"
+    "region" = "ap-south-1"
+    "status" = "active"
+    "tier" = "shared"
+  }
+  "brightpath" = {
+    "db_target" = "shared"
+    "region" = "ap-south-1"
+    "status" = "active"
+    "tier" = "shared"
+  }
+  "cobalt" = {
+    "db_target" = "shared"
+    "region" = "ap-south-1"
+    "status" = "active"
+    "tier" = "shared"
+  }
+  "delta" = {
+    "db_target" = "dedicated:delta"
+    "region" = "ap-south-1"
+    "status" = "active"
+    "tier" = "dedicated"
+  }
+  "harbor" = {
+    "db_target" = "shared"
+    "region" = "ap-south-1"
+    "status" = "active"
+    "tier" = "shared"
+  }
+}

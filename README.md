@@ -19,12 +19,14 @@ Secure, multi-tenant B2B SaaS API: FastAPI + Postgres on AWS (`ap-south-1`), sha
 
 ## Live endpoints (keep up until live session)
 
-| Env | ALB | Notes |
+| Env | URL | Notes |
 |-----|-----|--------|
-| **Staging** | `http://ll-staging-alb-1605781679.ap-south-1.elb.amazonaws.com` | Primary evidence / incident drill |
-| **Production** | `http://ll-production-alb-2062045131.ap-south-1.elb.amazonaws.com` | Same modules; lean apply for dual-env parity |
+| **Staging** | `https://ledgerline.mannnan.com` | Primary evidence / incident drill (HTTP→HTTPS redirect) |
+| **Production** | `https://api.ledgerline.mannnan.com` | Same modules; lean dual-env parity |
+| Raw ALB (fallback) | `ll-staging-alb-…` / `ll-production-alb-…` `.ap-south-1.elb.amazonaws.com` | Still work; prefer custom domains |
 
 Smoke: `GET /ready` → `{"status":"ready"}`.  
+TLS: ACM cert in `ap-south-1` covering both hostnames.  
 Auth: `Authorization: Bearer <lab_api_key>` (keys shared with reviewers out-of-band — not committed).
 
 ---
@@ -41,7 +43,7 @@ flowchart TB
   end
 
   subgraph edge [Edge]
-    alb["ALB<br/>HTTP today · TLS when ACM set<br/>health: /ready"]
+    alb["ALB<br/>HTTPS + HTTP→HTTPS redirect<br/>health: /ready"]
   end
 
   subgraph compute [Compute · public subnets · no NAT]
@@ -250,7 +252,6 @@ Acme cutover (&lt;5 min downtime design): [`docs/runbooks/acme-cutover.md`](docs
 
 ## Known limitations
 
-- ALB is **HTTP** until a domain + ACM cert (`docs/runbooks/enable-tls.md`)  
 - Lean idle size does **not** hold 200 RPS; use documented capacity profile  
 - App-layer tenancy only (no Postgres RLS yet)  
 - Load/restore deep evidence is on **staging**; production is lean dual-env parity + smoke  

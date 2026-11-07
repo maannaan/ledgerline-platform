@@ -1,0 +1,257 @@
+./infra/scripts/deploy_env.sh "production" "0998abf"
+Login Succeeded
+#0 building with "colima" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 664B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.12-slim
+#2 DONE 0.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 156B 0.0s done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 DONE 0.0s
+
+#5 [1/7] FROM docker.io/library/python:3.12-slim@sha256:4840d514c583a4d3d8cad3940e68dee6f0f6f3635c12fcd0a3d74c21a5b93a54
+#5 resolve docker.io/library/python:3.12-slim@sha256:4840d514c583a4d3d8cad3940e68dee6f0f6f3635c12fcd0a3d74c21a5b93a54 0.1s done
+#5 DONE 0.1s
+
+#4 [internal] load build context
+#4 transferring context: 1.76kB 0.0s done
+#4 DONE 0.0s
+
+#6 [2/7] WORKDIR /app
+#6 CACHED
+
+#7 [3/7] RUN apt-get update   && apt-get upgrade -y   && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [4/7] COPY requirements.txt .
+#8 CACHED
+
+#9 [5/7] RUN pip install --no-cache-dir "--only-binary=:all:" -r requirements.txt
+#9 4.089 Collecting fastapi==0.162.0 (from -r requirements.txt (line 1))
+#9 4.412   Downloading fastapi-0.162.0-py3-none-any.whl.metadata (26 kB)
+#9 4.497 Collecting uvicorn==0.40.0 (from uvicorn[standard]==0.40.0->-r requirements.txt (line 2))
+#9 4.519   Downloading uvicorn-0.40.0-py3-none-any.whl.metadata (6.7 kB)
+#9 4.587 Collecting starlette==1.3.1 (from -r requirements.txt (line 3))
+#9 4.613   Downloading starlette-1.3.1-py3-none-any.whl.metadata (6.4 kB)
+#9 4.617 Collecting anyio==4.14.2 (from -r requirements.txt (line 4))
+#9 4.639   Downloading anyio-4.14.2-py3-none-any.whl.metadata (4.6 kB)
+#9 4.772 Collecting psycopg==3.2.3 (from psycopg[binary]==3.2.3->-r requirements.txt (line 5))
+#9 4.797   Downloading psycopg-3.2.3-py3-none-any.whl.metadata (4.3 kB)
+#9 4.849 Collecting psycopg_pool==3.2.3 (from -r requirements.txt (line 6))
+#9 4.878   Downloading psycopg_pool-3.2.3-py3-none-any.whl.metadata (2.6 kB)
+#9 4.920 Collecting prometheus_client==0.21.0 (from -r requirements.txt (line 7))
+#9 4.946   Downloading prometheus_client-0.21.0-py3-none-any.whl.metadata (1.8 kB)
+#9 4.994 Collecting httpx==0.28.1 (from -r requirements.txt (line 8))
+#9 5.017   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+#9 5.297 Collecting pydantic>=2.9.0 (from fastapi==0.162.0->-r requirements.txt (line 1))
+#9 5.323   Downloading pydantic-2.14.3-py3-none-any.whl.metadata (141 kB)
+#9 5.402 Collecting typing-extensions>=4.8.0 (from fastapi==0.162.0->-r requirements.txt (line 1))
+#9 5.438   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+#9 5.475 Collecting typing-inspection>=0.4.2 (from fastapi==0.162.0->-r requirements.txt (line 1))
+#9 5.499   Downloading typing_inspection-0.4.5-py3-none-any.whl.metadata (2.6 kB)
+#9 5.532 Collecting annotated-doc>=0.0.2 (from fastapi==0.162.0->-r requirements.txt (line 1))
+#9 5.560   Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+#9 5.710 Collecting opentelemetry-api>=1.44.0 (from fastapi==0.162.0->-r requirements.txt (line 1))
+#9 5.812   Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+#9 5.857 Collecting click>=7.0 (from uvicorn==0.40.0->uvicorn[standard]==0.40.0->-r requirements.txt (line 2))
+#9 5.880   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+#9 5.923 Collecting h11>=0.8 (from uvicorn==0.40.0->uvicorn[standard]==0.40.0->-r requirements.txt (line 2))
+#9 5.948   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+#9 6.016 Collecting idna>=2.8 (from anyio==4.14.2->-r requirements.txt (line 4))
+#9 6.046   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+#9 6.125 Collecting certifi (from httpx==0.28.1->-r requirements.txt (line 8))
+#9 6.152   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+#9 6.215 Collecting httpcore==1.* (from httpx==0.28.1->-r requirements.txt (line 8))
+#9 6.340   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+#9 6.660 Collecting psycopg-binary==3.2.3 (from psycopg[binary]==3.2.3->-r requirements.txt (line 5))
+#9 6.746   Downloading psycopg_binary-3.2.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.8 kB)
+#9 6.904 Collecting httptools>=0.6.3 (from uvicorn[standard]==0.40.0->-r requirements.txt (line 2))
+#9 6.931   Downloading httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+#9 6.994 Collecting python-dotenv>=0.13 (from uvicorn[standard]==0.40.0->-r requirements.txt (line 2))
+#9 7.018   Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+#9 7.125 Collecting pyyaml>=5.1 (from uvicorn[standard]==0.40.0->-r requirements.txt (line 2))
+#9 7.167   Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+#9 7.272 Collecting uvloop>=0.15.1 (from uvicorn[standard]==0.40.0->-r requirements.txt (line 2))
+#9 7.411   Downloading uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.1 kB)
+#9 7.608 Collecting watchfiles>=0.13 (from uvicorn[standard]==0.40.0->-r requirements.txt (line 2))
+#9 7.650   Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+#9 8.793 Collecting websockets>=10.4 (from uvicorn[standard]==0.40.0->-r requirements.txt (line 2))
+#9 8.893   Downloading websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.3 kB)
+#9 9.032 Collecting annotated-types>=0.6.0 (from pydantic>=2.9.0->fastapi==0.162.0->-r requirements.txt (line 1))
+#9 9.077   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+#9 10.98 Collecting pydantic-core==2.50.4 (from pydantic>=2.9.0->fastapi==0.162.0->-r requirements.txt (line 1))
+#9 11.13   Downloading pydantic_core-2.50.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.6 kB)
+#9 11.24 Downloading fastapi-0.162.0-py3-none-any.whl (148 kB)
+#9 11.31 Downloading uvicorn-0.40.0-py3-none-any.whl (68 kB)
+#9 11.36 Downloading starlette-1.3.1-py3-none-any.whl (73 kB)
+#9 11.42 Downloading anyio-4.14.2-py3-none-any.whl (125 kB)
+#9 11.47 Downloading psycopg-3.2.3-py3-none-any.whl (197 kB)
+#9 11.66 Downloading psycopg_pool-3.2.3-py3-none-any.whl (38 kB)
+#9 11.69 Downloading prometheus_client-0.21.0-py3-none-any.whl (54 kB)
+#9 11.75 Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+#9 11.80 Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+#9 11.85 Downloading psycopg_binary-3.2.3-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (4.2 MB)
+#9 14.03    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.2/4.2 MB 1.8 MB/s eta 0:00:00
+#9 14.15 Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+#9 14.28 Downloading click-8.5.1-py3-none-any.whl (126 kB)
+#9 14.37 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+#9 14.42 Downloading httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (552 kB)
+#9 14.63    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 552.8/552.8 kB 2.6 MB/s eta 0:00:00
+#9 14.67 Downloading idna-3.20-py3-none-any.whl (69 kB)
+#9 14.60 Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+#9 14.74 Downloading pydantic-2.14.3-py3-none-any.whl (494 kB)
+#9 14.98 Downloading pydantic_core-2.50.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.3 MB)
+#9 16.17    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 2.2 MB/s eta 0:00:00
+#9 16.30 Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+#9 16.33 Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+#9 16.64    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 2.9 MB/s eta 0:00:00
+#9 16.68 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+#9 16.72 Downloading typing_inspection-0.4.5-py3-none-any.whl (14 kB)
+#9 16.85 Downloading uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.5 MB)
+#9 19.19    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 1.9 MB/s eta 0:00:00
+#9 19.23 Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (458 kB)
+#9 19.64 Downloading websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (226 kB)
+#9 19.74 Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+#9 19.81 Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+#9 20.04 Installing collected packages: websockets, uvloop, typing-extensions, pyyaml, python-dotenv, psycopg-binary, prometheus_client, idna, httptools, h11, click, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, pydantic-core, psycopg_pool, psycopg, opentelemetry-api, httpcore, anyio, watchfiles, starlette, pydantic, httpx, fastapi
+#9 24.00 Successfully installed annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.14.2 certifi-2026.10.23 click-8.5.1 fastapi-0.162.0 h11-0.16.0 httpcore-1.0.9 httptools-0.9.0 httpx-0.28.1 idna-3.20 opentelemetry-api-1.45.2 prometheus_client-0.21.0 psycopg-3.2.3 psycopg-binary-3.2.3 psycopg_pool-3.2.3 pydantic-2.14.3 pydantic-core-2.50.4 python-dotenv-1.2.4 pyyaml-6.0.3 starlette-1.3.1 typing-extensions-4.16.0 typing-inspection-0.4.5 uvicorn-0.40.0 uvloop-0.23.0 watchfiles-1.3.0 websockets-17.4
+#9 24.00 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#9 24.34 
+#9 24.34 [notice] A new release of pip is available: 25.0.1 -> 26.3
+#9 24.34 [notice] To update, run: pip install --upgrade pip
+#9 DONE 24.7s
+
+#10 [6/7] COPY config.py auth.py db.py schema.py main.py telemetry.py logging_setup.py audit.py bootstrap_auth.py seed.py ./
+#10 DONE 0.3s
+
+#11 [7/7] RUN useradd --create-home --uid 10001 appuser   && chown -R appuser:appuser /app
+#11 DONE 0.7s
+
+#12 exporting to image
+#12 exporting layers
+#12 exporting layers 5.7s done
+#12 exporting manifest sha256:eaa08de415accd94a264e5e1637e89405a35a3950f57f67cf52dfcbf5c86a9ba 0.0s done
+#12 exporting config sha256:0bce729b1827f0987cc38065ed8359c958c304dc186186e5edbc644caf0f0d06 0.0s done
+#12 exporting attestation manifest sha256:33c986f5e556bdf5a43f3fefe129c4f916348c1e4ad5fdce6884c120b5dd6f97
+#12 exporting attestation manifest sha256:33c986f5e556bdf5a43f3fefe129c4f916348c1e4ad5fdce6884c120b5dd6f97 0.1s done
+#12 exporting manifest list sha256:0588815a875bb8b5f31ad6303b5e1fc93c64b90b1a2baa8dbc0a01c03ea85771 0.0s done
+#12 naming to 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-production-api:0998abf done
+#12 unpacking to 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-production-api:0998abf
+#12 unpacking to 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-production-api:0998abf 2.3s done
+#12 naming to 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-production-api:latest 0.0s done
+#12 unpacking to 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-production-api:latest 0.1s done
+#12 DONE 8.5s
+The push refers to repository [660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-production-api]
+7b25003bd358: Waiting
+68bced9e0afa: Waiting
+37fb86c2a767: Waiting
+05e0eee5572e: Waiting
+07e9f31c8bdc: Waiting
+9e59a2fda839: Waiting
+2dc99d2d0a39: Waiting
+bb5beb951249: Waiting
+edd550ee6bf6: Waiting
+635d5be4bda9: Waiting
+fdb15b743f4d: Waiting
+7b25003bd358: Waiting
+68bced9e0afa: Waiting
+37fb86c2a767: Waiting
+05e0eee5572e: Waiting
+07e9f31c8bdc: Waiting
+9e59a2fda839: Waiting
+2dc99d2d0a39: Waiting
+bb5beb951249: Waiting
+edd550ee6bf6: Waiting
+635d5be4bda9: Waiting
+fdb15b743f4d: Waiting
+07e9f31c8bdc: Waiting
+9e59a2fda839: Waiting
+2dc99d2d0a39: Waiting
+bb5beb951249: Waiting
+edd550ee6bf6: Waiting
+635d5be4bda9: Waiting
+fdb15b743f4d: Waiting
+7b25003bd358: Waiting
+68bced9e0afa: Waiting
+37fb86c2a767: Waiting
+05e0eee5572e: Waiting
+37fb86c2a767: Waiting
+05e0eee5572e: Waiting
+07e9f31c8bdc: Waiting
+9e59a2fda839: Waiting
+2dc99d2d0a39: Waiting
+bb5beb951249: Waiting
+edd550ee6bf6: Waiting
+635d5be4bda9: Waiting
+fdb15b743f4d: Waiting
+7b25003bd358: Waiting
+68bced9e0afa: Waiting
+edd550ee6bf6: Waiting
+68bced9e0afa: Waiting
+9e59a2fda839: Waiting
+2dc99d2d0a39: Waiting
+2dc99d2d0a39: Waiting
+edd550ee6bf6: Waiting
+2dc99d2d0a39: Waiting
+edd550ee6bf6: Waiting
+05e0eee5572e: Pushed
+07e9f31c8bdc: Pushed
+bb5beb951249: Pushed
+635d5be4bda9: Pushed
+fdb15b743f4d: Pushed
+9e59a2fda839: Pushed
+edd550ee6bf6: Pushed
+68bced9e0afa: Pushed
+2dc99d2d0a39: Pushed
+7b25003bd358: Pushed
+37fb86c2a767: Pushed
+0998abf: digest: sha256:0588815a875bb8b5f31ad6303b5e1fc93c64b90b1a2baa8dbc0a01c03ea85771 size: 856
+The push refers to repository [660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-production-api]
+05e0eee5572e: Waiting
+68bced9e0afa: Waiting
+9e59a2fda839: Waiting
+bb5beb951249: Waiting
+fdb15b743f4d: Waiting
+edd550ee6bf6: Waiting
+635d5be4bda9: Waiting
+37fb86c2a767: Waiting
+7b25003bd358: Waiting
+2dc99d2d0a39: Waiting
+07e9f31c8bdc: Waiting
+edd550ee6bf6: Waiting
+635d5be4bda9: Waiting
+37fb86c2a767: Waiting
+7b25003bd358: Waiting
+2dc99d2d0a39: Waiting
+07e9f31c8bdc: Waiting
+05e0eee5572e: Waiting
+68bced9e0afa: Waiting
+9e59a2fda839: Waiting
+bb5beb951249: Waiting
+fdb15b743f4d: Waiting
+edd550ee6bf6: Already exists
+635d5be4bda9: Layer already exists
+37fb86c2a767: Layer already exists
+7b25003bd358: Layer already exists
+2dc99d2d0a39: Layer already exists
+07e9f31c8bdc: Waiting
+05e0eee5572e: Layer already exists
+68bced9e0afa: Layer already exists
+9e59a2fda839: Layer already exists
+bb5beb951249: Waiting
+fdb15b743f4d: Layer already exists
+07e9f31c8bdc: Layer already exists
+bb5beb951249: Layer already exists
+latest: digest: sha256:0588815a875bb8b5f31ad6303b5e1fc93c64b90b1a2baa8dbc0a01c03ea85771 size: 856
+deploying 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-production-api@sha256:0588815a875bb8b5f31ad6303b5e1fc93c64b90b1a2baa8dbc0a01c03ea85771 (tag=0998abf env=production)
+previous_taskdef=arn:aws:ecs:ap-south-1:660442155240:task-definition/ll-production-api:1
+deployed_taskdef=arn:aws:ecs:ap-south-1:660442155240:task-definition/ll-production-api:2
+image_tag=0998abf
+Rollout uses ECS rolling deploy + deployment circuit breaker rollback.

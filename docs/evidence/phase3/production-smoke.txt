@@ -1,0 +1,32 @@
+=== production smoke 2026-11-07T03:39Z ===
+ALB=http://ll-production-alb-2062045131.ap-south-1.elb.amazonaws.com
+
+--- /health ---
+{"status":"ok"}
+HTTP 200
+
+--- /ready ---
+{"status":"ready"}
+HTTP 200
+
+--- spoof header (expect 403) ---
+{"error":"X-Tenant-Id does not match authenticated tenant","request_id":"321618a1-c800-467f-878a-dfbb13854c97"}
+HTTP 403
+
+--- create record acme ---
+{"id":1}
+HTTP 201
+
+--- list acme ---
+[{"id":1,"payload":{"payload":{"note":"production dual-env smoke"},"external_id":"prod-smoke-1"},"created_at":"2026-11-07T03:39:06.447412+00:00"}]
+HTTP 200
+
+--- list brightpath ---
+[]
+HTTP 200
+
+--- delta auth ---
+[]
+HTTP 200
+
+bootstrap=done keys_file=.cloud-lab-keys-production

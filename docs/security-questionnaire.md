@@ -1,6 +1,6 @@
 # Delta Finance — Security Questionnaire
 
-**Status:** Answers reflect **staging cloud controls** verified 2026-11-03…2026-11-05 (ap-south-1), plus local isolation tests.  
+**Status:** Answers reflect **staging + production cloud controls** verified through 2026-11-07 (ap-south-1), plus local isolation tests.  
 **Audience:** Delta Finance security team  
 **Honesty rule:** Labels below match evidence, not aspirational marketing.
 
@@ -9,7 +9,7 @@
 | # | Status | Answer |
 |---|--------|--------|
 | 1 | Implemented and tested | Tenant access uses Bearer API keys bound to one `tenant_id`. Server derives tenant from the key hash; `X-Tenant-Id` is never authority (mismatch → 403). SQL is parameterized and tenant-scoped. Automated isolation tests run in CI. **Delta has a dedicated RDS instance + dedicated KMS CMK** on staging (`ll-staging-delta-pg`, `alias/ll-staging-delta`). |
-| 2 | Partial | **At rest:** RDS storage encryption with KMS (shared key for pooled DB; dedicated key for Delta) — cloud verified. **In transit:** staging ALB is currently **HTTP** (no customer domain/ACM yet). TLS enablement path documented (`docs/runbooks/enable-tls.md`). Local Compose remains HTTP by design. |
+| 2 | Implemented (cloud) | **At rest:** RDS storage encryption with KMS (shared key for pooled DB; dedicated key for Delta). **In transit:** ACM TLS on ALBs — `https://ledgerline.mannnan.com` (staging) and `https://api.ledgerline.mannnan.com` (production); HTTP→HTTPS redirect. Local Compose remains HTTP by design. |
 | 3 | Partial | App secrets (DB URL, admin token, pepper) live in **AWS Secrets Manager**; ECS task roles fetch them (no secrets in image). Admin API uses shared `ADMIN_TOKEN` Bearer with append-only `admin_audit_events`. Formal joiner/mover/leaver + SSO MFA is **not** productized (90-day plan). |
 | 4 | Not currently supported | MFA / SSO for staff production access is not in this assessment build. Planned in days 31–60 with OIDC. |
 | 5 | Partial | API keys stored as peppered SHA-256 hashes only. Pepper + admin token in Secrets Manager. Rotation without downtime is stretch / month-2 (S4 deferred). |

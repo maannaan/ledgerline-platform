@@ -3,8 +3,10 @@
 .env.*
 !.env.example
 .cloud-lab-keys
+.cloud-lab-keys-production
 infra/environments/**/tfplan
 .last-taskdef-staging
+.last-taskdef-production
 
 *.pem
 *.key

@@ -1,0 +1,11 @@
+# terraform output summary (2026-11-07 lean production apply)
+alb_dns_name = ll-production-alb-2062045131.ap-south-1.elb.amazonaws.com
+ecr_repository_url = 660442155240.dkr.ecr.ap-south-1.amazonaws.com/ll-production-api
+ci_secret_name = ll-production/ci
+shared_db_endpoint = ll-production-shared-pg.ctuqm8c04sdk.ap-south-1.rds.amazonaws.com
+dedicated_db_endpoints.delta = ll-production-delta-pg.ctuqm8c04sdk.ap-south-1.rds.amazonaws.com
+gha_role_arn = arn:aws:iam::660442155240:role/ll-production-gha
+image_tag_deployed = 0998abf
+api_desired_count = 1
+deletion_protection = false
+Apply complete! Resources: 51 added, 0 changed, 0 destroyed.

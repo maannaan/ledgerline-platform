@@ -38,7 +38,7 @@ platform-apply:
 	  echo "Refusing apply. Re-run with APPROVE_APPLY=1 after billing alarms + cost approval."; \
 	  exit 1; \
 	fi
-	cd $(INFRA_DIR) && terraform apply -input=false
+	cd $(INFRA_DIR) && terraform apply -input=false -auto-approve
 
 onboard:
 	@if [ -z "$(TENANT)" ]; then echo "TENANT is required"; exit 1; fi
