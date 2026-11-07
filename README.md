@@ -152,6 +152,40 @@ flowchart TB
 
 ---
 
+## Observability (CloudWatch screenshots)
+
+Task 3 evidence from live AWS (`ap-south-1`). Source files: [`docs/evidence/phase4/screenshots/`](docs/evidence/phase4/screenshots/).
+
+### Dashboard — Ledgerline-Staging
+
+ALB request rate / 5xx, target response time, ECS CPU & memory, plus **tenant-filtered** request logs (`tenant`, `route`, `status`, `request_id`).
+
+![CloudWatch dashboard Ledgerline-Staging](docs/evidence/phase4/screenshots/cw-dashboard-ledgerline-staging.png)
+
+### Alarms (≥3, SLO-tied) — all OK
+
+`ledgerline-staging-latency` · `ledgerline-staging-unhealthy-hosts` · `ledgerline-staging-5xx`
+
+![CloudWatch alarms OK](docs/evidence/phase4/screenshots/cw-alarms-ok.png)
+
+### Application Signals — staging + production services
+
+Both envs visible: `ll-staging-alb` / `ll-staging-api` and `ll-production-alb` / `ll-production-api`.
+
+![CloudWatch Application Signals services](docs/evidence/phase4/screenshots/cw-application-signals-services.png)
+
+### Production ALB signals (latency / errors)
+
+![CloudWatch production ALB signals](docs/evidence/phase4/screenshots/cw-production-alb-signals.png)
+
+### Log groups
+
+API log groups for staging and production (1-week retention) under CloudWatch Logs.
+
+![CloudWatch log groups](docs/evidence/phase4/screenshots/cw-log-groups.png)
+
+---
+
 ## Benchmarks & evidence (staging)
 
 | Test | Result | Evidence |
